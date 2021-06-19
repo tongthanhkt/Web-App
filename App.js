@@ -55,7 +55,7 @@ const database = mysql.createConnection({
     user: process.env.DATABASE_USER,
     password: process.env.DATABASE_PASSWORD,
     database: process.env.DATABASE,
-   // port: process.env.DATABASE_PORT
+    port: process.env.DATABASE_PORT
 });
 
 //kết nới với sql.
@@ -66,3 +66,10 @@ database.connect((error) => {
         console.log('MySQL connected.');
     }
 });
+
+// Buộc phải có hàm này, bởi vì khi kết nới vs sql ở trên internet sẽ có khoảng thời gian timeout
+// Nếu hết thời gian timeout đó (ý là trong quá trình đó ko sử dụng truy vấn) ==> server sẽ đóng ==> ném ra lỗi error.
+// Để server ko đóng ==> dùng hàm này để liên tục truy vấn ==> Chương trình chạy bth.
+setInterval(function () {
+    database.query('SELECT 1');
+}, 10001);
