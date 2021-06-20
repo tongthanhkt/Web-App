@@ -1,0 +1,80 @@
+body {
+    background-color: #86ac41;
+}
+
+#background_home {
+    border-top: 5px solid;
+    border-bottom: 5px solid;
+    border-right: 5px solid;
+    border-left: 5px solid;
+    border-color:white;
+
+    background-color: lightyellow;
+    text-align: left;
+    text-indent: 5px;
+}
+
+nav{
+    background-color:#324851;
+    color: #fff;
+    padding: 30px 60px;
+    display: flex;
+    justify-content: space-between;
+
+}
+
+nav ul {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+nav li {
+    list-style: none;
+}
+nav li a {
+    color: #fff;
+    text-decoration: wavy;
+    font-weight: bold;
+    padding: 5px 8px;
+}
+
+nav li a:hover{
+    color: yellow;
+    text-decoration:none;
+}
+
+
+#background_student_UI{
+    background-color:#763626;
+    color: #fff;
+    padding: 20px 30px;
+
+}
+
+.column {
+    float: left;
+    width: 33.33%;
+}
+
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+#rcorners1 {
+    border-radius: 25px;
+    background: #34675c;
+    padding: 20px;
+    width: 18rem;
+    margin:50px 40px;
+    transition: width 2s, height 4s;
+}
+
+#rcorners1:hover{
+    width: 20rem;
+    height: 15rem;
+}
+
+.buttonGo {background-color: #7da3a1;}
