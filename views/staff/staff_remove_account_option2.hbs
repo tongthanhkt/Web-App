@@ -67,12 +67,12 @@
         }
     </script>
 
-   <body>
-        <div class="container" style="padding:10px 10px;">
+   <body style = "background-color: #86ac41">
+        <div class="container mt-4" style="padding:20px 20px; background-color: #fff; border-radius: 15px">
 	    <div id="header"></div>
 	    <div class="well">
 		<div class="row">
-             <form>
+            <form>
 		    <form class="form-inline">
 			    <div class="form-group">
 			    <label for="fileUpload">Upload a CSV formatted file:</label>
@@ -80,7 +80,6 @@
                 &ensp;
 			    <input type="file" id="fileUpload"  class="form-control"  name = "fileUpload" accept=".csv" required />
 			    </div>
-			
                 <div class="form-group">
                 &ensp; 
 			    <button type="button" id="upload" value="Upload" class="btn btn-primary" onclick = "Upload()">Upload File</button>

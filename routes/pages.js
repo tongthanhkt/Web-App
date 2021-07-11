@@ -58,4 +58,15 @@ router.get('/staff/staff_remove_account_option2', (req, res) => {
     res.render('staff/staff_remove_account_option2');
 });
 
+
+//Giao diện tạo tài khoản bằng form
+router.get('/staff/account_form', (req, res) => {
+    res.render('staff/account_form')
+});
+
+// giao diện tạo tài khoản bằng file
+router.get('/staff/account_file', (req, res) => {
+    res.render('staff/account_file')
+});
+
 module.exports = router;

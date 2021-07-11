@@ -4,6 +4,8 @@ dotenv.config({ path: './.env' });
 
 //ASYNC 
 var async = require('async');
+const csv = require('csv-parser');
+const fs = require('fs');
 
 //MYSQL
 const mysql = require('mysql');
@@ -248,9 +250,130 @@ exports.staff_remove_account_option2 = (req, res) => {
             p = p.then (makePromiseFunc (id[i]));
         }
         
-        res.status(200).redirect('../../staff/staff_remove_account_option2');
+        return res.status(400).render('../views/staff/staff_remove_account_option2', {
+            message: 'Remove successfully!'
+        })
     }
     catch (error) {
+        console.log(error);
+    }
+}
+
+
+
+// tạo tài khoản bằng form
+exports.account_form = async(req, res) => {
+    try {
+        const { id, fullname, phone, year, DoB, password, passwordConfirm, faculty } = req.body; // đọc dữ liệu sau khi nhấn submit
+        const type = req.body.inlineRadioOptions; // loại account cần tạo
+        if (!id || !fullname || !phone || !year || !DoB || !password || !faculty || !type) { // trường hợp nhập không đủ thông tin
+            return res.status(400).render('../views/staff/account_form', {
+                message: 'Please provide full necessary information of account.'
+            })
+        }
+
+        database.query('Select * from Account where Account.ID = ?', [id], async(error, results) => {
+            if (results.length > 0) {
+                return res.status(400).render('../views/staff/account_form', {
+                    message: 'Account has already existed'
+                })
+            } else if (password !== passwordConfirm) {
+                return res.status(400).render('../views/staff/account_form', {
+                    message: 'Passwords do not match'
+                })
+            }
+
+            let hashedPassword = await bcrypt.hashSync(password, 8);
+
+            if (type === "student") {
+                database.query('Insert into Account set ?', { ID: id, Password: hashedPassword, Type: 1 })
+                database.query('Insert into Student set ?', { StudentID: id, Fullname: fullname, PhoneNumber: phone, StartYear: year, DateOfBirth: DoB, Password: hashedPassword, Faculty: faculty }, (error, results) => {
+                    if (error) {
+                        console.log(error)
+                    } else {
+                        return res.status(400).render('../views/staff/account_form', {
+                            message: 'Account created successfully!'
+                        })
+                    }
+                })
+            } else {
+                database.query('Insert into Account set ?', { ID: id, Password: hashedPassword, Type: 2 })
+                database.query('Insert into Lecturer set ?', { LecturerID: id, Fullname: fullname, PhoneNumber: phone, StartYear: year, Faculty: faculty, Password: hashedPassword, DateOfBirth: DoB }, (error, results) => {
+                    if (error) {
+                        console.log(error)
+                    } else {
+                        return res.status(400).render('../views/staff/account_form', {
+                            message: 'Account created successfully!'
+                        })
+                    }
+                })
+            }
+        })
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+// tạo tài khoản bằng csv
+exports.account_file = async(req, res) => {
+    try {
+        let info = []; // lưu thông tin trong csv
+        fs.createReadStream(req.body.file) // đọc csv
+            .pipe(csv({ delimiter: ',' }))
+            .on('data', (row) => {
+                info.push(row); // thêm thông tin
+            })
+            .on('end', () => { // sau khi đọc file xong
+                let id = [];
+                let count = 0;
+                for (let i = 0; i < info.length; i++) { // thay đổi một số thuộc tính vì file csv lưu không đúng định dạng
+                    for (let property in info[i]) {
+                        if (property.length == 3)
+                            id.push(info[i][property]);
+                        else if (property == 'PhoneNumber')
+                            info[i][property] = info[i][property].replace(' ', '');
+                        else if (property == "DateOfBirth")
+                            info[i][property] = info[i][property].replace(/ /g, '/');
+                    }
+                }
+
+                for (let i = 0; i < info.length; i++) { // quá trình thêm vào database
+                    if (info[i]['Type'] == "Student") {
+                        database.query('Select * from Account where Account.ID = ?', [id[i]], async(error, results) => {
+                            if (results.length === 0) {
+                                count++;
+                                let hashedPassword = await bcrypt.hashSync(info[i]['Password'], 8);
+
+                                database.query('Insert into Account set ?', { ID: id[i], Password: hashedPassword, Type: 1 });
+                                database.query('Insert into Student set ?', { StudentID: id[i], Fullname: info[i]['Fullname'], PhoneNumber: info[i]['PhoneNumber'], StartYear: info[i]['StartYear'], DateOfBirth: info[i]['DateOfBirth'], Password: hashedPassword, Faculty: info[i]['Faculty'] }, (error, results) => {
+                                    if (error) {
+                                        console.log(error)
+                                    }
+                                })
+                            }
+                        })
+                    } else {
+                        database.query('Select * from Account where Account.ID = ?', [id[i]], async(error, results) => {
+                            if (results.length === 0) {
+                                count++;
+                                let hashedPassword = await bcrypt.hashSync(info[i]['Password'], 8);
+
+                                database.query('Insert into Account set ?', { ID: id[i], Password: hashedPassword, Type: 2 });
+                                database.query('Insert into Lecturer set ?', { LecturerID: id[i], Fullname: info[i]['Fullname'], PhoneNumber: info[i]['PhoneNumber'], StartYear: info[i]['StartYear'], DateOfBirth: info[i]['DateOfBirth'], Password: hashedPassword, Faculty: info[i]['Faculty'] }, (error, results) => {
+                                    if (error) {
+                                        console.log(error)
+                                    }
+                                })
+                            }
+                        })
+                    }
+                }
+
+                return res.status(400).render('../views/staff/account_file', {
+                    message: `Created successfully!`
+                })
+            });
+    } catch (error) {
         console.log(error);
     }
 }

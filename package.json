@@ -12,8 +12,10 @@
   "dependencies": {
     "async": "^3.2.0",
     "bcryptjs": "^2.4.3",
+    "csv-parser": "^3.0.0",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
+    "fs": "0.0.1-security",
     "hbs": "^4.1.2",
     "mysql": "^2.18.1",
     "nodemon": "^2.0.7"
