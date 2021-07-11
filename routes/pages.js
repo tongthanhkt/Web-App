@@ -42,4 +42,20 @@ router.get('/staff/staff_UI', (req, res) => {
 });
 
 
+//Giao diện của Staff- chức năng remove account.
+router.get('/staff/staff_remove_account', (req, res) => {
+    res.render('staff/staff_remove_account');
+});
+
+//Giao diện của Staff- chức năng remove  1 account --> option 1.
+router.get('/staff/staff_remove_account_option1', (req, res) => {
+    res.render('staff/staff_remove_account_option1');
+});
+
+
+//Giao diện của Staff- chức năng remove nhiều account thông qua .csv --> option 2.
+router.get('/staff/staff_remove_account_option2', (req, res) => {
+    res.render('staff/staff_remove_account_option2');
+});
+
 module.exports = router;
