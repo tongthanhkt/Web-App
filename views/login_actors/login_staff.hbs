@@ -16,7 +16,12 @@
             <li><a href="/login">Login</a></li>
         </ul>
     </nav>
-
+    <script type = "text/javascript">
+        function SetID(){
+            var id = document.getElementById("id").value;
+            localStorage.setItem("ID", id);
+        }
+    </script>
     <div class="container mt-4">
         <div class="card">
             <div class = "card-header">
@@ -37,10 +42,9 @@
                             <input type="password" class = "form-control" id = "password" name = "password">
                         </div>
                     </p>
-                    <button type="submit" class="btn btn-primary">Login</button>
+                    <button type="submit" class="btn btn-primary" onclick = "SetID()">Login</button>
                 </form>
             </div>
-
         </div>     
         {{#if message}}   
             <h4 class = "alert alert-danger mt-4">{{message}}</h4>

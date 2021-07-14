@@ -59,14 +59,20 @@ router.get('/staff/staff_remove_account_option2', (req, res) => {
 });
 
 
-//Giao diện tạo tài khoản bằng form
+//Giao diện của Staff - tạo tài khoản bằng form
 router.get('/staff/account_form', (req, res) => {
     res.render('staff/account_form')
 });
 
-// giao diện tạo tài khoản bằng file
+//Giao diện của Staff -  tạo tài khoản bằng file
 router.get('/staff/account_file', (req, res) => {
     res.render('staff/account_file')
 });
+
+//Giao diện của Staff - chức năng sửa đổi thông tin.
+router.get('/staff/staff_change_profile', (req, res) => {
+    res.render('staff/staff_change_profile')
+});
+
 
 module.exports = router;

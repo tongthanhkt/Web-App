@@ -25,4 +25,8 @@ router.post('/staff/account_form', authController.account_form);
 //Staff- chức năng Create Account - Tạo tài khaonr bằng file csv.
 router.post('/staff/account_file', authController.account_file);
 
+//Staff- chức năng Change Profile - Sửa đổi thông tin tài khoản
+router.post('/staff/staff_change_profile', authController.staff_change_profile);
+
+
 module.exports = router;

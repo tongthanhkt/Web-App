@@ -1,4 +1,4 @@
-// file này khá giống với .cpp bên C++, file này dùng để viết các hàm.
+//This file has all the function for each key feature.
 const dotenv = require('dotenv');
 dotenv.config({ path: './.env' });
 
@@ -7,6 +7,10 @@ var async = require('async');
 const csv = require('csv-parser');
 const fs = require('fs');
 
+
+//LOCAL STORAGE:
+var LocalStorage = require('node-localstorage').LocalStorage;
+localStorage = new LocalStorage('./scratch');
 //MYSQL
 const mysql = require('mysql');
 const database = mysql.createPool({
@@ -145,7 +149,6 @@ exports.login_staff = async (req, res) => {
             }
             else { // login thành công.
                 console.log('Login successful');
-                console.log(results[0].ID);
                 return res.status(200).redirect('../../staff/staff_UI');
             }
         })
@@ -184,6 +187,7 @@ exports.staff_remove_account_option1 = async (req, res) => {
                     });
                 }
                 else if (results[0].Type == 2) {
+                    console.log(id);
                     database.query(`DELETE FROM Lecturer WHERE LecturerID = ?`, id, function(err) {
                         if (err) {
                             return console.error(err.message);
@@ -194,12 +198,13 @@ exports.staff_remove_account_option1 = async (req, res) => {
                     if (err) {
                         return console.error(err.message);
                     }
+                    else {
+                        console.log('Remove successfully');
+                        return res.status(200).render('../views/staff/staff_remove_account_option1'), {
+                            message: 'Remove Account Successfully.'
+                        };
+                    }
                 });
-                // close the database connection
-                console.log('Remove successfully');
-                return res.status(400).render('../views/staff/staff_remove_account_option1'), {
-                    message: 'Remove Account Successfully.'
-                };
             }
             else if (results[0].Type == 3){
                 return res.status(400).render('../views/staff/staff_remove_account_option1', {
@@ -233,6 +238,7 @@ function makePromiseFunc (idx) {
 
 exports.staff_remove_account_option2 = (req, res) => {
     try {
+        console.log(req.body);
         let id = req.body.data;
     
         for (let i = 1; i < id.length - 1; i++) {
@@ -249,10 +255,12 @@ exports.staff_remove_account_option2 = (req, res) => {
         // Assign variables to the same
             p = p.then (makePromiseFunc (id[i]));
         }
+        if (true) {
+            return res.render('../views/staff/staff_remove_account_option2', {
+                message: 'Remove successfully!'
+            })
+        }
         
-        return res.status(400).render('../views/staff/staff_remove_account_option2', {
-            message: 'Remove successfully!'
-        })
     }
     catch (error) {
         console.log(error);
@@ -373,6 +381,104 @@ exports.account_file = async(req, res) => {
                     message: `Created successfully!`
                 })
             });
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
+
+//STAFF - CHANGE PROFILE.
+function Update_Data (id, info, index) {
+    return new Promise(function (res, rej) {
+        if (info != '') {
+            if (index == 0) {
+                database.query (
+                    "Update Staff Set Fullname = ? WHERE StaffID = ?", [info, id], function (error) {
+                        if (error) {
+                            return console.error(error.message);   
+                    }
+                });
+            }
+            else if (index == 1) {
+                database.query (
+                    "Update Staff Set PhoneNumber = ? WHERE StaffID = ?", [info, id], function (error) {
+                        if (error) {
+                            return console.error(error.message);   
+                    }
+                });
+            }
+            else if (index == 2) {
+                database.query (
+                    "Update Staff Set StartYear = ? WHERE StaffID = ?", [info, id], function (error) {
+                        if (error) {
+                            return console.error(error.message);   
+                    }
+                });
+            }
+            else if (index == 3) {
+                database.query (
+                    "Update Staff Set DateOfBirth = ? WHERE StaffID = ?", [info, id], function (error) {
+                        if (error) {
+                            return console.error(error.message);   
+                    }
+                });
+            }
+        }
+    });
+}
+
+exports.staff_change_profile = async (req, res) => {
+    try {
+        console.log(req.body);
+        var id = localStorage.getItem("ID");
+        console.log(id);
+        const { fullname, phone, year, DoB } = req.body;
+        
+        var p = new Promise((resolve, reject) => {
+            setTimeout(() => {
+              resolve('foo');
+            }, 3000);
+        });
+
+        if (!fullname && !phone && !year && !DoB){
+            return res.status(400).render('../views/staff/staff_change_profile', {
+                message: 'Provide at least 1 data!'
+            })
+        }
+        else {
+            if (phone.length > 0 && phone.length < 10) {
+                return res.status(400).render('../views/staff/staff_change_profile', {
+                    message: 'Phone has 10 numbers'
+                })
+            }
+            else if (year.length > 0 && year.length < 4) {
+                return res.status(400).render('../views/staff/staff_change_profile', {
+                    message: 'Wrong start year!'
+                })
+            }
+            else if (year.length == 4 && (Number(year) < 1995 || Number(year)> 2021)) {
+                return res.status(400).render('../views/staff/staff_change_profile', {
+                    message: 'Wrong start year!'
+                })
+            }
+            else {
+                let data = [];
+                data.push(fullname);
+                data.push(phone);
+                data.push(year);
+                data.push(DoB);
+                for (var i = 0; i < data.length; i++) {
+                // Assign variables to the same
+                    p = p.then (Update_Data (id,data[i], i));
+                }
+                return res.status(400).render('../views/staff/staff_change_profile', {
+                    message: 'Update successfully!'
+                })
+            }
+        }
+        
+
     } catch (error) {
         console.log(error);
     }
