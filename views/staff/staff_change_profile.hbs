@@ -17,7 +17,7 @@
                 <div class="dropdown" >
                 <a><button type="button" class="btn btn-outline-warning" >Profile</button></a>
                     <div class="dropdown-content" style = "border-radius: 5px; padding: 5px">
-                        <a href="#"><button type="button" class="btn btn-outline-warning">View Profile</button></a>
+                        <a href="/staff/staff_view_profile"><button type="button" class="btn btn-outline-warning">View Profile</button></a>
                         <a href="/staff/staff_change_profile"><button type="button" class="btn btn-outline-warning">Change Profile</button></a>
                     </div>
                 </div>
@@ -39,26 +39,33 @@
                 <form action = "/auth/staff/staff_change_profile" method = "POST">
                     <p>
                         <div class = "form-group">
-                            <label for="fullname">Full name</label>
+                            <label for="fullname">Full Name:</label>
                             <input type="text" class = "form-control" id = "fullname" name = "fullname">
                         </div>
                     </p>
                     <p>
                         <div class = "form-group">
-                            <label for="phone">Phone Number</label>
+                            <label for="phone">Phone Number:</label>
                             <input type="text" class = "form-control" id = "phone" name = "phone">
                         </div>
                     </p>
                     <p>
                         <div class = "form-group">
-                            <label for="year">Start year</label>
+                            <label for="year">Start Year:</label>
                             <input type="text" class = "form-control" id = "year" name = "year">
                         </div>
                     </p>
                     <p>
                         <div class = "form-group">
-                            <label for="DoB">Date of Birth (YYYY/MM/DD)</label>
+                            <label for="DoB">Date of Birth (YYYY/MM/DD):</label>
                             <input type="text" class = "form-control" id = "DoB" name = "DoB">
+                        </div>
+                    </p>
+
+                    <p>
+                        <div class = "form-group">
+                            <label for="address">Address:</label>
+                            <input type="text" class = "form-control" id = "address" name = "address">
                         </div>
                     </p>
                     

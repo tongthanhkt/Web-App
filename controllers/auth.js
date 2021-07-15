@@ -11,6 +11,7 @@ const fs = require('fs');
 //LOCAL STORAGE:
 var LocalStorage = require('node-localstorage').LocalStorage;
 localStorage = new LocalStorage('./scratch');
+
 //MYSQL
 const mysql = require('mysql');
 const database = mysql.createPool({
@@ -124,6 +125,7 @@ exports.login_lecturer = async (req, res) => {
 exports.login_staff = async (req, res) => {
     try {
         const { id, password } = req.body;
+        global.localStorage.setItem("ID",id);
         console.log(req.body);
         if (!id || !password) { //trường hợp để trống không nhập gì mà nhấn Submit.
             return res.status(400).render('../views/login_actors/login_staff', {
@@ -424,6 +426,14 @@ function Update_Data (id, info, index) {
                     }
                 });
             }
+            else if (index == 4) {
+                database.query (
+                    "Update Staff Set Address = ? WHERE StaffID = ?", [info, id], function (error) {
+                        if (error) {
+                            return console.error(error.message);   
+                    }
+                });
+            }
         }
     });
 }
@@ -433,7 +443,7 @@ exports.staff_change_profile = async (req, res) => {
         console.log(req.body);
         var id = localStorage.getItem("ID");
         console.log(id);
-        const { fullname, phone, year, DoB } = req.body;
+        const { fullname, phone, year, DoB, address } = req.body;
         
         var p = new Promise((resolve, reject) => {
             setTimeout(() => {
@@ -441,7 +451,7 @@ exports.staff_change_profile = async (req, res) => {
             }, 3000);
         });
 
-        if (!fullname && !phone && !year && !DoB){
+        if (!fullname && !phone && !year && !DoB && !address){
             return res.status(400).render('../views/staff/staff_change_profile', {
                 message: 'Provide at least 1 data!'
             })
@@ -468,6 +478,7 @@ exports.staff_change_profile = async (req, res) => {
                 data.push(phone);
                 data.push(year);
                 data.push(DoB);
+                data.push(address);
                 for (var i = 0; i < data.length; i++) {
                 // Assign variables to the same
                     p = p.then (Update_Data (id,data[i], i));
@@ -477,9 +488,8 @@ exports.staff_change_profile = async (req, res) => {
                 })
             }
         }
-        
-
     } catch (error) {
         console.log(error);
     }
 }
+
