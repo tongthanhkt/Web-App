@@ -78,3 +78,8 @@ nav li a:hover{
 }
 
 .buttonGo {background-color: #7da3a1;}
+
+#center_bar{
+    align-items: center;
+}
+

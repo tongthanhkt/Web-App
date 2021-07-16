@@ -42,7 +42,23 @@ router.get('/staff/staff_UI', (req, res) => {
 });
 
 
-//CHỨC NĂNG CỦA STAFF
+//Giao diện của Staff- chức năng remove account.
+router.get('/staff/staff_remove_account', (req, res) => {
+    res.render('staff/staff_remove_account');
+});
+
+//Giao diện của Staff- chức năng remove  1 account --> option 1.
+router.get('/staff/staff_remove_account_option1', (req, res) => {
+    res.render('staff/staff_remove_account_option1');
+});
+
+
+//Giao diện của Staff- chức năng remove nhiều account thông qua .csv --> option 2.
+router.get('/staff/staff_remove_account_option2', (req, res) => {
+    res.render('staff/staff_remove_account_option2');
+});
+
+
 //Giao diện tạo tài khoản bằng form
 router.get('/staff/account_form', (req, res) => {
     res.render('staff/account_form')
@@ -53,5 +69,9 @@ router.get('/staff/account_file', (req, res) => {
     res.render('staff/account_file')
 });
 
+// giao diện đổi mật khẩu
+router.get('/staff/change_password', (req, res) => {
+    res.render('staff/change_password')
+});
 
 module.exports = router;
