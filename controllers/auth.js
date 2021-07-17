@@ -634,7 +634,7 @@ exports.view = (req, res) => {
     connection.query("SELECT * FROM Course ", (err, rows) => {
       connection.release();
       if (!err) {
-        res.render("home", { rows });
+        res.render("../view/student/student_UI", { rows });
       } else {
       }
       console.log("The data from table: \n", rows);
