@@ -25,8 +25,9 @@ router.get("/login_actors/login_staff", (req, res) => {
 
 // ĐĂNG NHẬP THÀNH CÔNG ==> HIỆN GIAO DIỆN ỨNG VỚI TỪNG ACTORS.
 //Giao diện của Student.
-const courseController = require("../controllers/auth");
-router.get("/student/student_UI", courseController.view);
+router.get("/student/student_UI", (req, res) => {
+  res.render("student/student_UI");
+});
 
 //Giao diện của Lecturer.
 router.get("/lecturer/lecturer_UI", (req, res) => {
@@ -67,5 +68,9 @@ router.get("/staff/account_file", (req, res) => {
 router.get("/staff/staff_change_profile", (req, res) => {
   res.render("staff/staff_change_profile");
 });
+
+// Giao diện của Student - view course
+const courseController = require("../controllers/auth");
+router.get("/student/view_course", courseController.view_course);
 
 module.exports = router;

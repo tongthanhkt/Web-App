@@ -63,15 +63,16 @@ exports.login_student = async (req, res) => {
         //!await bcrypt:  là dùng để so sánh password.
         if (results.length == 0) {
           return res.status(400).render("../views/login_actors/login_student", {
-            message: "ID or Password is incorrect",
+            message: "Nothing",
           });
         } else if (!(await bcrypt.compareSync(password, results[0].Password))) {
           // result[0] là bởi vì chỉ có 1 kết quả trả về tương ứng với 1 id.
           return res.status(400).render("../views/login_actors/login_student", {
-            message: "ID or Password is incorrect",
+            message: "Password is incorrect",
           });
         } else {
           // login thành công.
+          localStorage.setItem("ID", id)
           console.log("Login successful");
           console.log(results[0].ID);
           return res.status(200).redirect("../../student/student_UI");
@@ -622,22 +623,27 @@ exports.staff_change_profile = async (req, res) => {
     console.log(error);
   }
 };
-exports.view = (req, res) => {
-  // User the connection
-  database.getConnection((err, connection) => {
-    if (err) {
-      console.error("error connecting: " + err.stack);
-      return;
-    }
-    console.log("Connected as ID" + connection.threadId);
 
-    connection.query("SELECT * FROM Course ", (err, rows) => {
-      connection.release();
-      if (!err) {
-        res.render("home", { rows });
-      } else {
+// Lấy dữ liệu Course từ database
+exports.view_course = (req, res) => {
+  // User the connection
+  try {
+    var id = localStorage.getItem("ID");
+
+    database.getConnection((err, connection) => {
+      if (err) {
+        console.error("error connecting: " + err.stack);
+        return;
       }
-      console.log("The data from table: \n", rows);
+
+      database.query("SELECT * FROM Course WHERE Course.StudentID = ?", [id], (err, rows) => {
+        if (!err) {
+          return res.status(400).render("../views/student/view_course", {rows});
+        }
+        console.log("The data from table: \n", rows);
+      });
     });
-  });
+  } catch (error) {
+    console.log(error);
+  }
 };
