@@ -1,0 +1,103 @@
+
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="/upload_csv.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+  <script src="papaparse.min.js"></script>
+  <title>Remove Accounts</title>
+  <style>
+	.pdfobject-container { height: 500px;}
+	.pdfobject { border: 1px solid #666;}
+  </style>
+</head>
+<body>
+    <body>
+        <nav  style = "background-color:#324851; color: #fff; padding: 30px 60px; display: flex; justify-content: space-between">
+            <h2><a href="../../staff/staff_UI"><button type="button" class="btn btn-outline-warning">Home Page</button></a></h2>
+            <ul style = "display: flex; justify-content: space-around; align-items: center;">
+                <li style = "list-style: none">
+                <a href = "#"><button type="button" class="btn btn-outline-warning">View Profile</button></a>
+                </li>   
+                <li style = "list-style: none">
+                <a style = "color: #fff; text-decoration: wavy; font-weight: bold; padding: 5px 8px; "><button type="button" class="btn btn-outline-warning">Log out</button></a>
+                </li>  
+            </ul>
+        </nav>
+    </body>
+
+    <script type="text/javascript">
+            function Upload() {
+                const disable_id = [];
+                var fileUpload = document.getElementById("fileUpload");
+                var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.csv|.txt)$/;
+                if (regex.test(fileUpload.value.toLowerCase())) {
+                    if (typeof (FileReader) != "undefined") {
+                        var reader = new FileReader();
+                        reader.onload = function (e) {
+                        var table = document.createElement("table");
+                        var rows = e.target.result.split("\n");
+                        for (var i = 0; i < rows.length; i++) {
+                            var cells = rows[i].split(",");
+                            if (cells.length > 1) {
+                                var row = table.insertRow(-1);
+                                    for (var j = 0; j < cells.length; j++) {
+                                        var cell = row.insertCell(-1);
+                                        cell.innerHTML = cells[j];
+                                        if (j % 2 != 0){
+                                            disable_id.push(cells[j]);
+                                        }
+                                        table.appendChild( document.createTextNode( '\u00A0' ) );
+                                }
+                            }
+                        }
+                        var dvCSV = document.getElementById("dvCSV");
+                        dvCSV.appendChild(table);
+                    
+                        $.post('/auth/staff/staff_remove_account_option2', $.param({ data: disable_id }, true), function(data) {});
+                    }
+                    reader.readAsText(fileUpload.files[0]);
+                } else {
+                    alert("This browser does not support HTML5.");
+                }
+            } else {
+                alert("Please upload a valid CSV file.");
+            }
+        }
+    </script>
+
+   <body style = "background-color: #86ac41">
+        <div class="container mt-4" style="padding:20px 20px; background-color: #fff; border-radius: 15px">
+	    <div id="header"></div>
+	    <div class="well">
+		<div class="row">
+            <form>
+		    <form class="form-inline">
+			    <div class="form-group">
+			    <label for="fileUpload">Upload a CSV formatted file:</label>
+                &ensp;
+                &ensp;
+			    <input type="file" id="fileUpload"  class="form-control"  name = "fileUpload" accept=".csv" required />
+			    </div>
+                <div class="form-group">
+                &ensp; 
+			    <button type="button" id="upload" value="Upload" class="btn btn-primary" onclick = "Upload()">Upload File</button>
+			    &ensp;
+                &ensp;
+                &ensp;
+                &ensp;
+                &ensp;
+                <a href = "/staff/staff_remove_account_option2"><button type="button" class="btn btn-primary" >Remove All</button></a>
+                </form>
+                </div>
+		    </form>
+		</div>
+        <hr />
+        <div id="dvCSV">
+        </div>
+        <br/>
+        <a href = "/staff/staff_remove_account"><button type="button" class="btn btn-outline-warning">Go Back</button></a>
+    </body>
+</body>
+</html>
