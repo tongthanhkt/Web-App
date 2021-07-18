@@ -20,12 +20,12 @@ router.post('/staff/staff_remove_account_option1', authController.staff_remove_a
 router.post('/staff/staff_remove_account_option2', authController.staff_remove_account_option2);
 
 //Staff- chức năng Create Account - Tạo tài khaonr bằng form.
-router.post('/staff/account_form', authController.account_form);
+router.post('/staff/staff_account_form', authController.staff_account_form);
 
 //Staff- chức năng Create Account - Tạo tài khaonr bằng file csv.
-router.post('/staff/account_file', authController.account_file);
+router.post('/staff/staff_account_file', authController.staff_account_file);
 
 //Staff - chức năng Change Password
-router.post('/staff/change_password', authController.change_password);
+router.post('/staff/staff_change_password', authController.staff_change_password);
 
 module.exports = router;

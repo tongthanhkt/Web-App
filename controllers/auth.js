@@ -255,23 +255,23 @@ exports.staff_remove_account_option2 = (req, res) => {
 
 
 // tạo tài khoản bằng form
-exports.account_form = async(req, res) => {
+exports.staff_account_form = async(req, res) => {
     try {
         const { id, fullname, phone, year, DoB, password, passwordConfirm, faculty } = req.body; // đọc dữ liệu sau khi nhấn submit
         const type = req.body.inlineRadioOptions; // loại account cần tạo
         if (!id || !fullname || !phone || !year || !DoB || !password || !faculty || !type) { // trường hợp nhập không đủ thông tin
-            return res.status(400).render('../views/staff/account_form', {
+            return res.status(400).render('../views/staff/staff_account_form', {
                 message: 'Please provide full necessary information of account.'
             })
         }
 
         database.query('Select * from Account where Account.ID = ?', [id], async(error, results) => {
             if (results.length > 0) {
-                return res.status(400).render('../views/staff/account_form', {
+                return res.status(400).render('../views/staff/staff_account_form', {
                     message: 'Account has already existed'
                 })
             } else if (password !== passwordConfirm) {
-                return res.status(400).render('../views/staff/account_form', {
+                return res.status(400).render('../views/staff/staff_account_form', {
                     message: 'Passwords do not match'
                 })
             }
@@ -284,7 +284,7 @@ exports.account_form = async(req, res) => {
                     if (error) {
                         console.log(error)
                     } else {
-                        return res.status(400).render('../views/staff/account_form', {
+                        return res.status(400).render('../views/staff/staff_account_form', {
                             message: 'Account created successfully!'
                         })
                     }
@@ -295,7 +295,7 @@ exports.account_form = async(req, res) => {
                     if (error) {
                         console.log(error)
                     } else {
-                        return res.status(400).render('../views/staff/account_form', {
+                        return res.status(400).render('../views/staff/staff_account_form', {
                             message: 'Account created successfully!'
                         })
                     }
@@ -308,7 +308,7 @@ exports.account_form = async(req, res) => {
 }
 
 // tạo tài khoản bằng csv
-exports.account_file = async(req, res) => {
+exports.staff_account_file = async(req, res) => {
     try {
         let info = []; // lưu thông tin trong csv
         fs.createReadStream(req.body.file) // đọc csv
@@ -362,7 +362,7 @@ exports.account_file = async(req, res) => {
                     }
                 }
 
-                return res.status(400).render('../views/staff/account_file', {
+                return res.status(400).render('../views/staff/staff_account_file', {
                     message: `Created successfully!`
                 })
             });
@@ -372,25 +372,25 @@ exports.account_file = async(req, res) => {
 }
 
 // thay đổi mật khẩu
-exports.change_password = async(req, res) => {
+exports.staff_change_password = async(req, res) => {
     const password = localStorage.getItem('password');
     const id = localStorage.getItem('id');
     const { oldPassword, newPassword, passwordConfirm } = req.body;
 
     if (!oldPassword || !newPassword || !passwordConfirm) { // trường hợp nhập không đủ thông tin
-        return res.status(400).render('../views/staff/change_password', {
+        return res.status(400).render('../views/staff/staff_change_password', {
             message: 'Please provide full necessary information.'
         })
     }
 
     if (oldPassword !== password) { // trường hợp nhập sai mật khẩu hiện tại
-        return res.status(400).render('../views/staff/change_password', {
+        return res.status(400).render('../views/staff/staff_change_password', {
             message: 'Old password does not match.'
         })
     }
 
     if (newPassword !== passwordConfirm) { // trường hợp nhập sai mật khẩu xác nhận
-        return res.status(400).render('../views/staff/change_password', {
+        return res.status(400).render('../views/staff/staff_change_password', {
             message: 'Password confirm does not match.'
         })
     }
@@ -400,7 +400,7 @@ exports.change_password = async(req, res) => {
     database.query('Update Account set Password = ? where ID = ?', [hashedPassword, id]);
     database.query('Update Staff set Password = ? where StaffID = ?', [hashedPassword, id]);
 
-    return res.status(400).render('../views/staff/change_password', {
+    return res.status(400).render('../views/staff/staff_change_password', {
         message: 'Changed successfully!'
     })
 }

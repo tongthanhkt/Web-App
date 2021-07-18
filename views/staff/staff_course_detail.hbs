@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=, initial-scale=1.0">
+    <title>HCMUS Moodle Mini</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <nav>
+        <h2><a href="../../staff/staff_UI"><button type="button" class="btn btn-outline-warning">Home Page</button></a></h2>
+        <ul>
+            <li>
+                <a href = "/staff/staff_change_password"><button type="button" class="btn btn-outline-warning">Change password</button></a>
+            </li> 
+            <li>
+                <a href = "#"><button type="button" class="btn btn-outline-warning">View Profile</button></a>
+            </li>   
+            <li>
+                <a href = "/"><button type="button" class="btn btn-outline-warning">Log out</button></a>
+            </li>  
+        </ul>
+    </nav>
+
+    <div class="container mt-4">
+        
+        <div class="card">
+            <div class = "card-header">
+                List of all members
+            </div>
+
+            <div class = "card-body">
+                <table class="table table-bordered" id="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">No</th>
+                            <th scope="col">ID</th>
+                            <th scope="col">Type</th>
+                            <th scope="col">Midterm</th>
+                            <th scope="col">Final</th>
+                            <th scope="col">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body"></tbody>
+                </table>
+            </div>
+        </div>
+
+        {{#if message}}   
+            <h4 class = "alert alert-danger mt-4">{{message}}</h4>
+        {{/if}}  
+    </div>   
+
+<script type="text/javascript">
+    var data = "{{data}}";
+    data = data.split(" ");
+    lecturer = [];
+    var index = data.length;
+    for (i = 0; i < data.length; i++){
+        if (data[i] != 0){
+            temp = data[i];
+            temp = temp.split("|");
+            if (!lecturer.includes(temp[0]))
+                lecturer.push(temp[0]);
+            var html = `<tr>
+                            <th scope="row">${i+1}</th>
+                            <td>${temp[1]}</td>
+                            <td>Student</td>
+                            <td>${temp[2]}</td>
+                            <td>${temp[3]}</td>
+                            <td>${temp[4]}</td>
+                        </tr>`;
+            document.getElementById("table-body").insertRow().innerHTML = html;
+        }
+    }
+    for (i = 0; i < lecturer.length; i++){
+        var html = `<tr>
+                        <th scope="row">${index}</th>
+                        <td>${lecturer[i]}</td>
+                        <td>Lecturer</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>`;
+        document.getElementById("table-body").insertRow().innerHTML = html;
+        index++;
+    }
+</script>
+
+</body> 
+</html>

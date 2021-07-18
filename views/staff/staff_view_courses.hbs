@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=, initial-scale=1.0">
     <title>HCMUS Moodle Mini</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
     <link rel="stylesheet" href="/style.css">
@@ -23,30 +23,57 @@
             </li>  
         </ul>
     </nav>
-
+    
     <div class="container mt-4">
+        
         <div class="card">
             <div class = "card-header">
-                Remove 1 Account
+                List of all courses
             </div>
 
             <div class = "card-body">
-                <form action = '/auth/staff/staff_remove_account_option1' method = "POST">
-                    <p>
-                        <div class = "form-group">
-                             <label for="id">ID</label>
-                            <input type="text" class = "form-control" id = "id" name = "id">
-                        </div>
-                    </p>
-                    <button type="submit" class="btn btn-primary">Remove</button>
-                </form>
+                <table class="table table-bordered" id="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">No</th>
+                            <th scope="col">Subject ID</th>
+                            <th scope="col">Class</th>
+                            <th scope="col">Year</th>
+                            <th scope="col">Semester</th>
+                            <th scope="col">Detail</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body"></tbody>
+                </table>
             </div>
+        </div>
 
-        </div>     
         {{#if message}}   
             <h4 class = "alert alert-danger mt-4">{{message}}</h4>
         {{/if}}  
-    </div>
+    </div>    
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+
+<script type="text/javascript">
+    var data = "{{data}}";
+    data = data.split(" ");
+    for (i = 0; i < data.length; i++){
+        if (data[i] != 0){
+            temp = data[i];
+            temp = temp.split("|");
+            var html = `<tr>
+                            <th scope="row">${i+1}</th>
+                            <td>${temp[0]}</td>
+                            <td>${temp[1]}</td>
+                            <td>${temp[2]}</td>
+                            <td>${temp[3]}</td>
+                            <td><a href="/staff/staff_course_detail?SubjectID=${temp[0]}&Class=${temp[1]}&Year=${temp[2]}&Semester=${temp[3]}">View</a></td>
+                        </tr>`;
+            document.getElementById("table-body").insertRow().innerHTML = html;
+        }
+    }   
+</script>
+
 </body>
 </html>
