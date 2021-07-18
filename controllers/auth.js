@@ -125,7 +125,8 @@ exports.login_lecturer = async (req, res) => {
 exports.login_staff = async (req, res) => {
     try {
         const { id, password } = req.body;
-        global.localStorage.setItem("ID",id);
+        localStorage.setItem("ID", id);
+        localStorage.setItem("Password",password);
         console.log(req.body);
         if (!id || !password) { //trường hợp để trống không nhập gì mà nhấn Submit.
             return res.status(400).render('../views/login_actors/login_staff', {
@@ -272,23 +273,23 @@ exports.staff_remove_account_option2 = (req, res) => {
 
 
 // tạo tài khoản bằng form
-exports.account_form = async(req, res) => {
+exports.staff_account_form = async(req, res) => {
     try {
         const { id, fullname, phone, year, DoB, password, passwordConfirm, faculty } = req.body; // đọc dữ liệu sau khi nhấn submit
         const type = req.body.inlineRadioOptions; // loại account cần tạo
         if (!id || !fullname || !phone || !year || !DoB || !password || !faculty || !type) { // trường hợp nhập không đủ thông tin
-            return res.status(400).render('../views/staff/account_form', {
+            return res.status(400).render('../views/staff/staff_account_form', {
                 message: 'Please provide full necessary information of account.'
             })
         }
 
         database.query('Select * from Account where Account.ID = ?', [id], async(error, results) => {
             if (results.length > 0) {
-                return res.status(400).render('../views/staff/account_form', {
+                return res.status(400).render('../views/staff/staff_account_form', {
                     message: 'Account has already existed'
                 })
             } else if (password !== passwordConfirm) {
-                return res.status(400).render('../views/staff/account_form', {
+                return res.status(400).render('../views/staff/staff_account_form', {
                     message: 'Passwords do not match'
                 })
             }
@@ -301,7 +302,7 @@ exports.account_form = async(req, res) => {
                     if (error) {
                         console.log(error)
                     } else {
-                        return res.status(400).render('../views/staff/account_form', {
+                        return res.status(400).render('../views/staff/staff_account_form', {
                             message: 'Account created successfully!'
                         })
                     }
@@ -312,7 +313,7 @@ exports.account_form = async(req, res) => {
                     if (error) {
                         console.log(error)
                     } else {
-                        return res.status(400).render('../views/staff/account_form', {
+                        return res.status(400).render('../views/staff/staff_account_form', {
                             message: 'Account created successfully!'
                         })
                     }
@@ -325,7 +326,7 @@ exports.account_form = async(req, res) => {
 }
 
 // tạo tài khoản bằng csv
-exports.account_file = async(req, res) => {
+exports.staff_account_file = async(req, res) => {
     try {
         let info = []; // lưu thông tin trong csv
         fs.createReadStream(req.body.file) // đọc csv
@@ -379,7 +380,7 @@ exports.account_file = async(req, res) => {
                     }
                 }
 
-                return res.status(400).render('../views/staff/account_file', {
+                return res.status(400).render('../views/staff/staff_account_file', {
                     message: `Created successfully!`
                 })
             });
@@ -493,3 +494,77 @@ exports.staff_change_profile = async (req, res) => {
     }
 }
 
+//Staff- Change Password;
+// thay đổi mật khẩu
+exports.staff_change_password = async(req, res) => {
+    const password = localStorage.getItem('Password');
+    const id = localStorage.getItem('ID');
+    const { oldPassword, newPassword, passwordConfirm } = req.body;
+
+    if (!oldPassword || !newPassword || !passwordConfirm) { // trường hợp nhập không đủ thông tin
+        return res.status(400).render('../views/staff/staff_change_password', {
+            message: 'Please provide full necessary information.'
+        })
+    }
+
+    if (oldPassword !== password) { // trường hợp nhập sai mật khẩu hiện tại
+        return res.status(400).render('../views/staff/staff_change_password', {
+            message: 'Old password does not match.'
+        })
+    }
+
+    if (newPassword !== passwordConfirm) { // trường hợp nhập sai mật khẩu xác nhận
+        return res.status(400).render('../views/staff/staff_change_password', {
+            message: 'Password confirm does not match.'
+        })
+    }
+
+    let hashedPassword = await bcrypt.hashSync(newPassword, 8);
+
+    database.query('Update Account set Password = ? where ID = ?', [hashedPassword, id]);
+    database.query('Update Staff set Password = ? where StaffID = ?', [hashedPassword, id]);
+    localStorage.setItem("Password", newPassword);
+    return res.status(400).render('../views/staff/staff_change_password', {
+        message: 'Changed successfully!'
+    })
+}
+
+
+
+
+
+
+
+exports.staff_search_accounts = async(req, res) => {
+    console.log(req.body)
+    const { id, first_name, last_name, phone, year, DoB, faculty, actor } = req.body
+    if (!id && !first_name && !last_name && !phone && !year && !DoB && faculty == "Choose Faculty" && actor =="Choose Actor") {
+        return res.status(400).render('../views/staff/staff_search_accounts', {
+            message: 'Provide at least 1 data!'
+        })
+    }
+
+    if (actor =="Choose Actor") {
+        return res.status(400).render('../views/staff/staff_search_accounts', {
+            message:  'Please choose actor to search!'
+        })
+    }
+    
+    if (phone.length > 0 && phone.length < 10) {
+        return res.status(400).render('../views/staff/staff_search_accounts', {
+            message:  'Phone number has 10 numbers!'
+        })
+    }
+
+    localStorage.setItem('ID_Search', id);
+    localStorage.setItem('FName_Search', first_name);
+    localStorage.setItem('LName_Search', last_name);
+    localStorage.setItem('Phone_Search', phone);
+    localStorage.setItem('Year_Search', year);
+    localStorage.setItem('DoB_Search', DoB);
+    localStorage.setItem('Faculty_Search', faculty);
+    localStorage.setItem('Actor_Search', actor);
+    
+    return res.render('../views/staff/staff_search_accounts_fillup')
+
+}

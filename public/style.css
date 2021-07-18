@@ -139,16 +139,21 @@ nav li a:hover{
 }
 
 th {
-  background: #009578;
-  color: #ffffff;
+  font-family: Times, "Times New Roman",Helvetica, sans-serif;
   text-align: left;
+  color: #000
 }
 
-th,
 td {
   padding: 10px 20px;
+  font-family: Times, "Times New Roman",Helvetica, sans-serif;
+  color: #000
 }
 
+tr {
+  font-family: Times, "Times New Roman",Helvetica, sans-serif;
+  text-align: left;
+}
 tr:nth-child(even) {
   background: #eeeeee;
 }

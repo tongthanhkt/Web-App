@@ -1,9 +1,9 @@
 const express = require('express');
 const dotenv = require('dotenv');
+const url = require('url');
 dotenv.config({ path: './.env' });
 
 //MYSQl
-//MYSQL
 const mysql = require('mysql');
 const database = mysql.createPool({
     host: process.env.DATABASE_HOST,
@@ -57,6 +57,11 @@ router.get('/staff/staff_UI', (req, res) => {
 
 
 //Giao diện của Staff- chức năng remove account.
+router.get('/staff/staff_manage_accounts', (req, res) => {
+    res.render('staff/staff_manage_accounts');
+});
+
+//Giao diện của Staff- chức năng remove account.
 router.get('/staff/staff_remove_account', (req, res) => {
     res.render('staff/staff_remove_account');
 });
@@ -74,13 +79,13 @@ router.get('/staff/staff_remove_account_option2', (req, res) => {
 
 
 //Giao diện của Staff - tạo tài khoản bằng form
-router.get('/staff/account_form', (req, res) => {
-    res.render('staff/account_form')
+router.get('/staff/staff_account_form', (req, res) => {
+    res.render('staff/staff_account_form')
 });
 
 //Giao diện của Staff -  tạo tài khoản bằng file
-router.get('/staff/account_file', (req, res) => {
-    res.render('staff/account_file')
+router.get('/staff/staff_account_file', (req, res) => {
+    res.render('staff/staff_account_file')
 });
 
 //Giao diện của Staff - chức năng sửa đổi thông tin cá nhân.
@@ -111,4 +116,159 @@ router.get('/staff/staff_view_profile', (req, res) => {
     });
 });
 
+
+// Giao diện đổi mật khẩu
+router.get('/staff/staff_change_password', (req, res) => {
+    res.render('staff/staff_change_password')
+});
+
+
+// Giao diện của Staff - chức năng quản lý khóa học
+router.get('/staff/staff_manage_course', (req, res) => {
+    res.render('staff/staff_manage_course')
+});
+
+// Giao diện của Staff - chức năng xem danh sách khóa học
+router.get('/staff/staff_view_courses', (req, res) => {
+    var query = 'SELECT SubjectID, Semester, Year, Class ' +
+        'FROM Course ' +
+        'GROUP BY SubjectID, Semester, Year, Class ' +
+        'ORDER BY Year DESC, Semester DESC, Class ASC, SubjectID ASC';
+    database.query(query, function(error, results) {
+        if (error) {
+            console.log(error);
+        } else {
+            console.log(results);
+            var temp = "";
+            for (element in results) {
+                temp += results[element]["SubjectID"] + "|" + results[element]["Class"] + "|" + results[element]["Year"] + "|" + results[element]["Semester"] + " ";
+            }
+            res.render('staff/staff_view_courses', { data: temp });
+        }
+    })
+});
+
+// Giao diện của Staff - chức năng xem chi tiết khóa học
+router.get('/staff/staff_course_detail', (req, res) => {
+    var url_parts = url.parse(req.url, true);
+    var data = url_parts.query;
+    var query = 'SELECT LecturerID, StudentID, Midterm, Final, Total ' +
+        'FROM Course ' +
+        `WHERE SubjectID = "${data["SubjectID"]}" and Class = "${data["Class"]}" and Year = ${data["Year"]} and Semester = ${data["Semester"]} ` +
+        'ORDER BY LecturerID, StudentID';
+    database.query(query, function(error, results) {
+        if (error) {
+            console.log(error);
+        } else {
+            console.log(results);
+            var temp = "";
+            for (element in results) {
+                temp += results[element]["LecturerID"] + "|" + results[element]["StudentID"] + "|" + results[element]["Midterm"] + "|" + results[element]["Final"] + "|" + results[element]["Total"] + " ";
+            }
+            res.render('staff/staff_course_detail', { data: temp });
+        }
+    })
+})
+
+
+
+// Giao diện tìm kiếm thông tin account -Search accounts
+router.get('/staff/staff_search_accounts', (req, res) => {
+    res.render('staff/staff_search_accounts')
+});
+
+// Giao diện tìm kiếm thông tin account -Search accounts fill up
+router.get('/staff/staff_search_accounts_fillup', (req, res) => {
+    res.render('staff/staff_search_accounts_fillup')
+});
+
+
+
+// Giao diện của Staff - chức năng xem danh sách khóa học
+router.get('/staff/staff_search_results', (req, res) => {
+    let id = localStorage.getItem("ID_Search");
+    let fname = localStorage.getItem("FName_Search");
+    let lname = localStorage.getItem("LName_Search");
+    let phone = localStorage.getItem("Phone_Search");
+    let year = localStorage.getItem("Year_Search");
+    let dob = localStorage.getItem("DoB_Search");
+    let faculty = localStorage.getItem("Faculty_Search");
+    let actor = localStorage.getItem("Actor_Search");
+    
+    if (!id && !fname && !lname && !phone && !year && !dob && faculty != "Choose Falcuty" && actor == "Student") {
+        database.query('SELECT * from Student where Student.Faculty = ?',[faculty], function(error, results) {
+            if (error) {
+                console.log("error ocurred while getting user details of " + id, error);
+                res.send({
+                    "code": 400,
+                    "failed": "error ocurred"
+                });
+            } else {
+                var temp = "";
+                for (element in results) {
+                    temp += results[element]["StudentID"] + "||" + results[element]["Fullname"] + "||" + results[element]["PhoneNumber"] + "||" + results[element]["StartYear"] + "||" + results[element]["DateOfBirth"] + "||" + results[element]["Faculty"] + "  ";
+                }
+                res.render('staff/staff_search_results', { data: temp });
+            }
+        });
+    }
+    if (!id && !fname && !lname && !phone && !year && !dob && faculty != "Choose Falcuty" && actor == "Lecturer") {
+        database.query('SELECT * from Lecturer where Lecturer.Faculty = ?',[faculty], function(error, results) {
+            if (error) {
+                console.log("error ocurred while getting user details of " + id, error);
+                res.send({
+                    "code": 400,
+                    "failed": "error ocurred"
+                });
+            } else {
+                var temp = "";
+                for (element in results) {
+                    temp += results[element]["LecturerID"] + "||" + results[element]["Fullname"] + "||" + results[element]["PhoneNumber"] + "||" + results[element]["StartYear"] + "||" + results[element]["DateOfBirth"] + "||" + results[element]["Faculty"] + "  ";
+                }
+                res.render('staff/staff_search_results', { data: temp });
+            }
+        });
+    }
+    else {
+        if (actor == "Lecturer") {
+            fname = '%' +fname + '%';
+            lname = '%' + lname;
+            database.query('SELECT * from Lecturer where LecturerID = ? OR PhoneNumber = ? OR Fullname LIKE ? OR Fullname LIKE ? OR StartYear = ? OR Faculty = ?',[id, phone, fname, lname,year, faculty], function(error, results) {
+                if (error) {
+                    console.log("error ocurred while getting user details of " + id, error);
+                    res.send({
+                        "code": 400,
+                        "failed": "error ocurred"
+                    });
+                } else {
+                    var temp = "";
+                    for (element in results) {
+                        temp += results[element]["LecturerID"] + "||" + results[element]["Fullname"] + "||" + results[element]["PhoneNumber"] + "||" + results[element]["StartYear"] + "||" + results[element]["DateOfBirth"] + "||" + results[element]["Faculty"] + "  ";
+                    }
+                    res.render('staff/staff_search_results', { data: temp });
+                }
+            });
+        }
+        else if (actor == "Student") {
+            fname = '%' +fname + '%';
+            lname = '%' + lname;
+            database.query('SELECT * from Student where StudentID = ? OR PhoneNumber = ? OR Fullname LIKE ? OR Fullname LIKE ? OR StartYear = ? OR Faculty = ?',[id, phone, fname, lname,year, faculty], function(error, results) {
+                if (error) {
+                    console.log("error ocurred while getting user details of " + id, error);
+                    res.send({
+                        "code": 400,
+                        "failed": "error ocurred"
+                    });
+                } else {
+                    var temp = "";
+                    for (element in results) {
+                        temp += results[element]["StudentID"] + "||" + results[element]["Fullname"] + "||" + results[element]["PhoneNumber"] + "||" + results[element]["StartYear"] + "||" + results[element]["DateOfBirth"] + "||" + results[element]["Faculty"] + "  ";
+                    }
+                    res.render('staff/staff_search_results', { data: temp });
+                }
+            });
+        }
+        
+    }
+});
 module.exports = router;

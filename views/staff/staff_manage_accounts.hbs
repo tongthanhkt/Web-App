@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=, initial-scale=1.0">
-    <title>HCMUS Moodle Mini</title>
+    <title>Manage Accounts</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
     <link rel="stylesheet" href="/style.css">
 </head>
@@ -29,20 +29,27 @@
     </nav>
 
     <div class="row">
-        <div class="row">
+        <div class="row"> 
             <div class="card" id = "rcorners1">
                 <div class="card-body" style="text-align: center;background-color:#34675c;">
-                    <h3 class="card-title" style = "color: white">Remove 1 Account</h3>
-                    <p class="card-text">Input an ID to remove that account.</p>
-                    <a href="/staff/staff_remove_account_option1" class="btn buttonGo" style = "color: white; font-weight: bolder">Go</a>
+                    <h3 class="card-title" style = "color: white">Create Accounts</h3>
+                    <p class="card-text">Input ID or .CSV file to create accounts.</p>
+                    <a href="/staff/staff_account_form" class="btn buttonGo" style = "color: white; font-weight: bolder">Go</a>
                 </div>
             </div>
 
             <div class="card" id = "rcorners1">
                 <div class="card-body" style="text-align: center;background-color:#34675c;">
-                    <h3 class="card-title" style = "color: white">Remove Account From CSV File</h3>
-                    <p class="card-text">Input an .csv to remove every account in that file.</p>
-                    <a href="/staff/staff_remove_account_option2" class="btn buttonGo" style = "color: white; font-weight: bolder">Go</a>
+                    <h3 class="card-title" style = "color: white">Remove Accounts</h3>
+                    <p class="card-text">Input ID or .CSV file to remove accounts.</p>
+                    <a href="/staff/staff_remove_account" class="btn buttonGo" style = "color: white; font-weight: bolder">Go</a>
+                </div>
+            </div>
+            <div class="card" id = "rcorners1">
+                <div class="card-body" style="text-align: center;background-color:#34675c;">
+                    <h3 class="card-title" style = "color: white">Search Accounts</h3>
+                    <p class="card-text">Input some data to get accounts's information.</p>
+                    <a href="/staff/staff_search_accounts" class="btn buttonGo" style = "color: white; font-weight: bolder">Go</a>
                 </div>
             </div>
         </div>
