@@ -653,3 +653,26 @@ exports.view_course = (req, res) => {
     console.log(error);
   }
 };
+
+exports.view_grade = (req, res) => {
+  // User the connection
+  try {
+    var id = localStorage.getItem("ID");
+
+    database.getConnection((err, connection) => {
+      if (err) {
+        console.error("error connecting: " + err.stack);
+        return;
+      }
+
+      database.query("SELECT SubjectID, Semester, Year, Midterm, Final, Total, Class FROM Course WHERE StudentID = ?", [id], (err, rows) => {
+        if (!err) {
+          return res.status(400).render("../views/student/view_grade", {rows});
+        }
+        console.log("The data from table: \n", rows);
+      });
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
