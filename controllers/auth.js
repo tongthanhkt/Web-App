@@ -637,7 +637,7 @@ exports.view_course = (req, res) => {
       }
 
       database.query(
-        "SELECT * FROM Course WHERE Course.StudentID = ?",
+        "SELECT * FROM Course,Subject WHERE Subject.SubjectID =Course.SubjectID and Course.StudentID = ?",
         [id],
         (err, rows) => {
           if (!err) {
