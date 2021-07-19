@@ -5,24 +5,18 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=, initial-scale=1.0">
     <title>View Course</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
-    <link rel="stylesheet" href="/style.css">
+    <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x"
+    crossorigin="anonymous">
+    <link
+    rel="stylesheet"
+    href="/style.css">
 </head>
 <body>
     <nav>
         <h2><a href="../../student/student_UI"><button type="button" class="btn btn-outline-warning">Home Page</button></a></h2>
-        <form class="d-flex">
-            <input
-                class="form-control me-2"
-                type="search"
-                placeholder="Search"
-                aria-label="Search"
-            />
-            <button
-                class="btn btn-outline-success"
-                type="submit"
-            >Search</button>
-        </form>
         <ul>
             <li>
                 <a href="/"><button type="button" class="btn btn-outline-warning">Log out</button></a>
@@ -34,51 +28,65 @@
         <div class="container mt-4">
         <div class="card">
             <div class = "card-body">
-                <form action = '/auth/student/view_course' method = "POST"></form>
-                    <div class="container pt-5 pb-5">
-                        <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                            <th scope="col">Student ID</th>
-                            <th scope="col">LecturerID</th>
-                            <th scope="col">SubjectID</th>
-                            <th scope="col">Semester</th>
-                            <th scope="col">Year</th>
-                            <th scope="col">Status</th>
-                            <th scope="col">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {{#each rows}}
-                            <tr>
-                                <th scope="row">{{this.StudentID}}</th>
+                <div class="container">
+                    <table class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                        <th scope="col" style="text-align: center">Student ID</th>
+                        <th scope="col" style="text-align: center">Class ID</ths>
+                        <th scope="col" style="text-align: center">Lecturer ID</th>
+                        <th scope="col" style="text-align: center">Subject ID</th>
+                        <th scope="col" style="text-align: center">Semester</th>
+                        <th scope="col" style="text-align: center">Year</th>
+                        <th scope="col" style="text-align: center">Status</th>
+                        <th scope="col" style="text-align: center">Grade</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each rows}}
+                        <tr>
+                            <th scope="row" style="text-align: center">{{this.StudentID}}</th>
 
-                                <td>{{this.LecturerID}}</td>
-                                <td>{{this.SubjectID}}</td>
-                                <td>{{this.SemesterID}}</td>
-                                <td>{{this.Year}}</td>
-                                <td class="text-end">
-                                <a type="button" class="btn btn-light btn-small"><i
-                                    class="bi bi-eye"
-                                    style="center"
-                                    >View</i></a>
-                                </td>
-                            </tr>
-                            {{/each}}
-                        </tbody>
-                        </table>
-                    </div>
+                            <td style="text-align: center">{{this.Class}}</td>
+                            <td style="text-align: center">{{this.LecturerID}}</td>
+                            <td style="text-align: center">{{this.SubjectID}}</td>
+                            <td style="text-align: center">{{this.Semester}}</td>
+                            <td style="text-align: center">{{this.Year}}</td>
+                            <td class="text-end" style="text-align: center">
+                            <a type="button" class="btn btn-light btn-small">
+                                <i class="bi bi-eye" style="center">View</i>
+                            </a>
+                            </td>
+                            <td style="text-align: center">
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                        View grade
+                                    </button>
+                                        <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item">Midterm: {{this.Midterm}}</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item">Final: {{this.Final}}</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item">Total: {{this.Total}}</a></li>
+                                        </ul>
+                                </div>
+                            </td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                    </table>
+                </div>
             </div>
-        </div>     
-        {{#if message}}   
-            <h4 class = "alert alert-danger mt-4">{{message}}</h4>
-        {{/if}}  
+            </div>     
+            {{#if message}}   
+                <h4 class = "alert alert-danger mt-4">{{message}}</h4>
+            {{/if}}  
     </div>
         <script
         src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"
-    ></script>
+        ></script>
     </body>
 </body>
 </html>
