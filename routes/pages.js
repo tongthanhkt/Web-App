@@ -72,8 +72,5 @@ router.get("/staff/staff_change_profile", (req, res) => {
 // Giao diện của Student - view course
 const courseController = require("../controllers/auth");
 router.get("/student/view_course", courseController.view_course);
-
-// Giao diện của Student - view grade
-router.get("/student/view_grade", courseController.view_grade);
-
+router.post("/", courseController.find);
 module.exports = router;
