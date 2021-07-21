@@ -36,6 +36,13 @@ router.get('/lecturer/lecturer_UI', (req, res) => {
     res.render('lecturer/lecturer_UI');
 });
 
+// Giao diện của ClassCourse khi Lecturer nhấn vào button view Class and Course
+router.get('/lecturer/ClassCourse',(req,res)=>{
+    res.render('lecturer/ClassCourse')
+});
+
+
+
 //Giao diện của Staff.
 router.get('/staff/staff_UI', (req, res) => {
     res.render('staff/staff_UI');

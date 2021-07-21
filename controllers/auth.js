@@ -72,16 +72,16 @@ exports.login_student = async (req, res) => {
 //Login for Lecturer.
 exports.login_lecturer = async (req, res) => {
     try {
-        const { username, password } = req.body;
+        const { id, password } = req.body;
         console.log(req.body);
-        if (!username || !password) { //trường hợp để trống không nhập gì mà nhấn Submit.
+        if (!id || !password) { //trường hợp để trống không nhập gì mà nhấn Submit.
             return res.status(400).render('../views/login_actors/login_lecturer', {
                 message: 'Please provide an username and password.'
             })
         }
         
         // Truy vấn để lấy dữ liệu type =1 là học sinh.
-        database.query('Select *from Account where Account.Type = 2 AND username = ?', [username], async (error, results) => {
+        database.query('Select *from Account where Account.Type = 2 AND id = ?', [id], async (error, results) => {
             console.log(results);
             //!result: tức là sau khi tủy vấn không có kết quả trả về.
             //!await bcrypt:  là dùng để so sánh password.
@@ -98,7 +98,7 @@ exports.login_lecturer = async (req, res) => {
             }
             else { // login thành công.
                 console.log('Login successful');
-                console.log(results[0].Username);
+                console.log(results[0].id);
                 return res.status(200).redirect('../../lecturer/lecturer_UI');
             }
         })
@@ -148,3 +148,24 @@ exports.login_staff = async (req, res) => {
 }
 
 
+// Truy vấn cho lecturer khi nhấn vào view class and course
+exports.viewClassLecturer=(req,res) =>{
+    
+    database.getConnection((err,connection)=>{
+        if(err) throw err; // not connected
+        console.log('Connected as ID: '+ connection.threadId);
+
+        // User the connection
+        connection.query('SELECT * FROM Lecturer',(err,rows)=>{
+            // When done with the connection, release it
+            connection.release();
+
+            if(!err){
+                res.render('../views/lecturer/ClassCourse',{rows});
+            }else{
+                console.log(err);
+            }
+            console.log("The data from lecturer table: \n",rows);
+        });
+    });
+}
