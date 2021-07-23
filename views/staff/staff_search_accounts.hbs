@@ -48,53 +48,50 @@
             localStorage.setItem('Actor_Search', actor);
         }
     </script>
-    <div class="container mt-4">
-        <div class="card" style = "border-radius: 25px; font-family: Times, "Times New Roman",Helvetica, sans-serif;">
+    <div class="container mt-4" style = " width: 40%; margin-left: 50px; font-family:'Times New Roman', Times, serif; float:left">
+        <div class="card" style = "border-radius: 25px;">
             <div class = "card-header">
                 Searching form 
             </div>
-
             <div class = "card-body">
                 <form action = '/auth/staff/staff_search_accounts' method = "POST">
-                    <p>
                         <div class = "form-group">
-                            <label for="id">ID</label>
+                            <label for="id">ID:</label>
                             <input type="text" class = "form-control" id = "id" name = "id">
-                        </div>
-                    </p>    
+                        </div> 
                     <p>
                         <div class = "form-group">
-                            <label for="first_name">First Name</label>
+                            <label for="first_name">First Name:</label>
                             <input type="text" class = "form-control" id = "first_name" name = "first_name">
                         </div>
                     </p>
                     <p>
                         <div class = "form-group">
-                            <label for="last_name">Last Name</label>
+                            <label for="last_name">Last Name:</label>
                             <input type="text" class = "form-control" id = "last_name" name = "last_name">
                         </div>
                     </p>
                     <p>
                         <div class = "form-group">
-                            <label for="phone">Phone Number</label>
+                            <label for="phone">Phone Number:</label>
                             <input type="text" class = "form-control" id = "phone" name = "phone">
                         </div>
                     </p>
                     <p>
                         <div class = "form-group">
-                            <label for="year">Start Year</label>
+                            <label for="year">Start Year:</label>
                             <input type="text" class = "form-control" id = "year" name = "year">
                         </div>
                     </p>
                     <p>
                         <div class = "form-group">
-                            <label for="DoB">Date of Birth (YYYY/MM/DD)</label>
+                            <label for="DoB">Date of Birth (YYYY/MM/DD):</label>
                             <input type="text" class = "form-control" id = "DoB" name = "DoB">
                         </div>
                     </p>
                     <p>
                         <div class = "form-group">
-                            <label for="faculty">Faculty</label>
+                            <label for="faculty">Faculty:</label>
                             <select class="form-select" name="faculty" id="faculty">
                                 <option selected>Choose Falcuty</option>
                                 <option value="Information Technology">Information Technology</option>
@@ -105,7 +102,7 @@
                     </p>
                     <p>
                         <div class = "form-group">
-                            <label for="actor">Actor</label>
+                            <label for="actor">Actor:</label>
                             <select class="form-select"  name="actor" id="actor">
                                 <option selected>Choose Actor</option>
                                 <option value="Student">Student</option>
@@ -113,13 +110,10 @@
                             </select>
                         </div>
                     </p>
-                    <div class="row">
-                        <div class="column">
-                            <div style="padding: 20px 0px;">
-                                <button type="submit" class="btn btn-primary" onclick = "SetSearchInfo()">Search</button>
-                            </div>
-                        </div>
-                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" onclick = "SetSearchInfo()">Search</button>
+                    <a href = "/staff/staff_manage_accounts"><button type="button" class="btn btn-outline-warning" style = "margin-left: 50px">Go Back</button></a>
+                    
                     
                 </form>
             </div>
@@ -129,6 +123,38 @@
             <h4 class = "alert alert-danger mt-4">{{message}}</h4>
         {{/if}}  
     </div>
+    <body>
+        <div class="container mt-4" style = " width: 75%; margin-left: 120px; font-family:'Times New Roman', Times, serif; float:inherit">
+            <div class="card">
+                <div class = "card-header" style= "background-color: #edcb6d;">
+                    <p style ="text-decoration: underline">
+                        Instruction:
+                    </p>
+                    <p style ="text-decoration: none">
+                        1> ID:  4 characters for Lecturer, 8 characters for Student.
+                    </p>
+                    <p style ="text-decoration: none">
+                        2> Name: instead of full name, you can search first name or last name.
+                    </p>
+                    <p style ="text-decoration: none">
+                        3> Phone Numbers: has 10 numbers exactly 10.
+                    </p>
+                    <p style ="text-decoration: none">
+                        4> Start Year: after 1995 to present.
+                    </p>
+                    <p style ="text-decoration: none">
+                        5> DoB: input as format Year/Month/Day.
+                    </p>
+                    <p style ="text-decoration: none">
+                        6> Choose Faculty and Actor, cannot let Actor empty.
+                    </p>
+                    <p style ="text-decoration: none">
+                        7> Click "Search" to view what you enter.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
 
 </body> 

@@ -108,8 +108,10 @@ router.get('/staff/staff_view_profile', (req, res) => {
             console.log(results);
             let profile = "";
             for (let key in results[0]) {
-                console.log(results[0][key]);
-                profile = profile+ results[0][key] + "!";
+                if (key != "Password") {
+                    console.log(results[0][key]);
+                    profile = profile+ results[0][key] + "!";
+                }
             }
             res.render("staff/staff_view_profile",{user:profile});
         }
