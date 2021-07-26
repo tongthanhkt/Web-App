@@ -85,6 +85,8 @@ exports.login_student = async (req, res) => {
 exports.login_lecturer = async (req, res) => {
     try {
         const { id, password } = req.body;
+        localStorage.setItem("ID", id);
+        localStorage.setItem("Password",password);
         console.log(req.body);
         if (!id || !password) { //trường hợp để trống không nhập gì mà nhấn Submit.
             return res.status(400).render('../views/login_actors/login_lecturer', {

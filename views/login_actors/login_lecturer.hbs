@@ -16,7 +16,12 @@
             <li><a href="/login">Login</a></li>
         </ul>
     </nav>
-
+    <script type = "text/javascript">
+        function SetID(){
+            var id = document.getElementById("id").value;
+            localStorage.setItem("ID", id);
+        }
+    </script>
     <div class="container mt-4">
         <div class="card">
             <div class = "card-header">
@@ -27,7 +32,7 @@
                 <form action = '/auth/login_actors/login_lecturer' method = "POST">
                     <p>
                         <div class = "form-group">
-                            <label for="id">Username</label>
+                            <label for="id">ID</label>
                             <input type="text" class = "form-control" id = "id" name = "id">
                         </div>
                     </p>    
