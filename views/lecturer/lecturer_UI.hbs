@@ -13,7 +13,14 @@
         <h2><a href="../../lecturer/lecturer_UI"><button type="button" class="btn btn-outline-warning">Home Page</button></a></h2>
         <ul>
             <li>
-                 <a href = "#"><button type="button" class="btn btn-outline-warning">View Profile</button></a>
+                <div class="dropdown" >
+                <a><button type="button" class="btn btn-outline-warning" >Profile</button></a>
+                    <div class="dropdown-content" style = "border-radius: 5px; padding: 5px">
+                        <a href="/lecturer/lecturer_view_profile"><button type="button" class="btn btn-outline-warning">View Profile</button></a>
+                        <a href="/lecturer/lecturer_change_profile"><button type="button" class="btn btn-outline-warning">Change Profile</button></a>
+                        <a href="/lecturer/lecturer_change_password"><button type="button" class="btn btn-outline-warning">Change Password</button></a>
+                    </div>
+                </div>
             </li>   
             <li>
                 <a ><button type="button" class="btn btn-outline-warning">Log out</button></a>
