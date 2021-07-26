@@ -13,20 +13,24 @@
         <h2><a href="../../staff/staff_UI"><button type="button" class="btn btn-outline-warning">Home Page</button></a></h2>
         <ul>
             <li>
-                <a href = "/staff/staff_change_password"><button type="button" class="btn btn-outline-warning">Change password</button></a>
-            </li> 
-            <li>
-                <a href = "#"><button type="button" class="btn btn-outline-warning">View Profile</button></a>
+                <div class="dropdown" >
+                <a><button type="button" class="btn btn-outline-warning" >Profile</button></a>
+                    <div class="dropdown-content" style = "border-radius: 5px; padding: 5px">
+                        <a href="/staff/staff_view_profile"><button type="button" class="btn btn-outline-warning">View Profile</button></a>
+                        <a href="/staff/staff_change_profile"><button type="button" class="btn btn-outline-warning">Change Profile</button></a>
+                        <a href="/staff/staff_change_password"><button type="button" class="btn btn-outline-warning">Change Password</button></a>
+                    </div>
+                </div>
             </li>   
             <li>
-                <a href = "/"><button type="button" class="btn btn-outline-warning">Log out</button></a>
+                <a href="/"><button type="button" class="btn btn-outline-warning">Log out</button></a>
             </li>  
         </ul>
     </nav>
 
     <div class="container mt-4">
         
-        <div class="card">
+        <div class="card" style = "border-radius: 25px;  font-family: Times, "Times New Roman",Helvetica, sans-serif;">
             <div class = "card-header">
                 List of all members
             </div>
@@ -34,7 +38,7 @@
             <div class = "card-body">
                 <table class="table table-bordered" id="table">
                     <thead>
-                        <tr>
+                        <tr style = "background-color: #9ed499; font-family: Times, "Times New Roman",Helvetica, sans-serif;">
                             <th scope="col">No</th>
                             <th scope="col">ID</th>
                             <th scope="col">Type</th>

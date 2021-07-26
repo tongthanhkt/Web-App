@@ -1,6 +1,9 @@
 const express = require('express');
 const app = express();
 
+//COOKIES:
+// const cookieParser = require('cookie-parser');
+// app.use(cookieParser());
 //HOMEPAGE.
 const path = require('path');
 app.set('view engine', 'hbs');

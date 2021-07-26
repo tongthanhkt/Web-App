@@ -13,13 +13,17 @@
         <h2><a href="../../staff/staff_UI"><button type="button" class="btn btn-outline-warning">Home Page</button></a></h2>
         <ul>
             <li>
-                <a href = "/staff/staff_change_password"><button type="button" class="btn btn-outline-warning">Change password</button></a>
-            </li> 
-            <li>
-                <a href = "#"><button type="button" class="btn btn-outline-warning">View Profile</button></a>
+                <div class="dropdown" >
+                <a><button type="button" class="btn btn-outline-warning" >Profile</button></a>
+                    <div class="dropdown-content" style = "border-radius: 5px; padding: 5px">
+                        <a href="/staff/staff_view_profile"><button type="button" class="btn btn-outline-warning">View Profile</button></a>
+                        <a href="/staff/staff_change_profile"><button type="button" class="btn btn-outline-warning">Change Profile</button></a>
+                        <a href="/staff/staff_change_password"><button type="button" class="btn btn-outline-warning">Change Password</button></a>
+                    </div>
+                </div>
             </li>   
             <li>
-                <a href = "/"><button type="button" class="btn btn-outline-warning">Log out</button></a>
+                <a href="/"><button type="button" class="btn btn-outline-warning">Log out</button></a>
             </li>  
         </ul>
     </nav>
@@ -28,8 +32,8 @@
         <div class="row">
             <div class="card" id = "rcorners1">
                 <div class="card-body" style="text-align: center;background-color:#34675c;">
-                    <h3 class="card-title" style = "color: white">View list of all courses</h3>
-                    <p class="card-text">Print list of courses, staff can choose a specific course to get more information.</p>
+                    <h3 class="card-title" style = "color: white">View Courses</h3>
+                    <p class="card-text">Print list of courses, choose a course to get more information.</p>
                     <a href="/staff/staff_view_courses" class="btn buttonGo" style = "color: white; font-weight: bolder">Go</a>
                 </div>
             </div>
