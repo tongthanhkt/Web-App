@@ -274,13 +274,7 @@ router.get('/staff/staff_search_results', (req, res) => {
 module.exports = router;
 
 
-//Giao diện của Lecturer- chức năng View class course.
-router.get('/lecturer/ClassCourse', (req, res) => {
-    res.render('lecturer/ClassCourse');
-});
-
-
-
+// LECTURER
 
 //Giao diện của Lecturer - chức năng xem thông tin cá nhân.
 router.get('/lecturer/lecturer_view_profile', (req, res) => {
@@ -314,4 +308,52 @@ router.get('/lecturer/lecturer_change_password', (req, res) => {
 //Giao diện của Lecturer - chức năng sửa đổi thông tin cá nhân.
 router.get('/lecturer/lecturer_change_profile', (req, res) => {
     res.render('lecturer/lecturer_change_profile')
+});
+
+// Lecturer - Xem danh sách các khóa học
+router.get('/lecturer/lecturer_view_course', (req, res) => {
+    var id = localStorage.getItem("ID");
+    console.log("ID",id);
+    database.query('SELECT Course.SubjectID,Name,Credit,Year,Semester,Class from Course,Subject where Course.SubjectID=Subject.SubjectID and LecturerID = ?',id, function(error, results) {
+        if (error) {
+            console.log("error ocurred while getting user details of " + id, error);
+            res.send({
+                "code": 400,
+                "failed": "error ocurred"
+            });
+        } else {
+            console.log(results);
+            var temp = "";
+            for (element in results) {
+                temp += results[element]["SubjectID"] + "||" + results[element]["Name"] + "||" + results[element]["Credit"] + "||" + results[element]["Year"] + "||" + results[element]["Semester"] + "||" + results[element]["Class"] +"  ";
+            }
+            console.log("temp: "+ temp)
+            res.render('lecturer/lecturer_view_course', { data: temp });
+        }
+    });
+});
+
+
+// Lecturer - Xem danh sách học sinh
+
+router.get('/lecturer/lecturer_view_student', (req, res) => {
+    var id = localStorage.getItem("ID");
+    console.log("ID",id);
+    database.query('SELECT Student.StudentID,Fullname,Midterm,Final,Total from Course,Subject,Student where Course.SubjectID=Subject.SubjectID and Student.StudentID=Course.StudentID and LecturerID = ?',id, function(error, results) {
+        if (error) {
+            console.log("error ocurred while getting user details of " + id, error);
+            res.send({
+                "code": 400,
+                "failed": "error ocurred"
+            });
+        } else {
+            console.log(results);
+            var temp = "";
+            for (element in results) {
+                temp += results[element]["StudentID"] + "||" + results[element]["Fullname"] + "||" + results[element]["Midterm"] + "||" + results[element]["Final"] + "||" + results[element]["Total"] + "  ";
+            }
+            console.log("temp: "+ temp)
+            res.render('lecturer/lecturer_view_student', { data: temp });
+        }
+    });
 });
