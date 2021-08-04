@@ -97,7 +97,7 @@ router.get('/staff/staff_change_profile', (req, res) => {
 router.get('/staff/staff_view_profile', (req, res) => {
     var id = localStorage.getItem("ID");
     console.log(id);
-    database.query('SELECT * from Staff where StaffID = ?', id, function(error, results) {
+    database.query('SELECT * from Staff where StaffID = ?', id, function (error, results) {
         if (error) {
             console.log("error ocurred while getting user details of " + id, error);
             res.send({
@@ -109,9 +109,9 @@ router.get('/staff/staff_view_profile', (req, res) => {
             let profile = "";
             for (let key in results[0]) {
                 console.log(results[0][key]);
-                profile = profile+ results[0][key] + "!";
+                profile = profile + results[0][key] + "!";
             }
-            res.render("staff/staff_view_profile",{user:profile});
+            res.render("staff/staff_view_profile", { user: profile });
         }
     });
 });
@@ -134,7 +134,7 @@ router.get('/staff/staff_view_courses', (req, res) => {
         'FROM Course ' +
         'GROUP BY SubjectID, Semester, Year, Class ' +
         'ORDER BY Year DESC, Semester DESC, Class ASC, SubjectID ASC';
-    database.query(query, function(error, results) {
+    database.query(query, function (error, results) {
         if (error) {
             console.log(error);
         } else {
@@ -156,7 +156,7 @@ router.get('/staff/staff_course_detail', (req, res) => {
         'FROM Course ' +
         `WHERE SubjectID = "${data["SubjectID"]}" and Class = "${data["Class"]}" and Year = ${data["Year"]} and Semester = ${data["Semester"]} ` +
         'ORDER BY LecturerID, StudentID';
-    database.query(query, function(error, results) {
+    database.query(query, function (error, results) {
         if (error) {
             console.log(error);
         } else {
@@ -194,9 +194,9 @@ router.get('/staff/staff_search_results', (req, res) => {
     let dob = localStorage.getItem("DoB_Search");
     let faculty = localStorage.getItem("Faculty_Search");
     let actor = localStorage.getItem("Actor_Search");
-    
+
     if (!id && !fname && !lname && !phone && !year && !dob && faculty != "Choose Falcuty" && actor == "Student") {
-        database.query('SELECT * from Student where Student.Faculty = ?',[faculty], function(error, results) {
+        database.query('SELECT * from Student where Student.Faculty = ?', [faculty], function (error, results) {
             if (error) {
                 console.log("error ocurred while getting user details of " + id, error);
                 res.send({
@@ -213,7 +213,7 @@ router.get('/staff/staff_search_results', (req, res) => {
         });
     }
     if (!id && !fname && !lname && !phone && !year && !dob && faculty != "Choose Falcuty" && actor == "Lecturer") {
-        database.query('SELECT * from Lecturer where Lecturer.Faculty = ?',[faculty], function(error, results) {
+        database.query('SELECT * from Lecturer where Lecturer.Faculty = ?', [faculty], function (error, results) {
             if (error) {
                 console.log("error ocurred while getting user details of " + id, error);
                 res.send({
@@ -231,9 +231,9 @@ router.get('/staff/staff_search_results', (req, res) => {
     }
     else {
         if (actor == "Lecturer") {
-            fname = '%' +fname + '%';
+            fname = '%' + fname + '%';
             lname = '%' + lname;
-            database.query('SELECT * from Lecturer where LecturerID = ? OR PhoneNumber = ? OR Fullname LIKE ? OR Fullname LIKE ? OR StartYear = ? OR Faculty = ?',[id, phone, fname, lname,year, faculty], function(error, results) {
+            database.query('SELECT * from Lecturer where LecturerID = ? OR PhoneNumber = ? OR Fullname LIKE ? OR Fullname LIKE ? OR StartYear = ? OR Faculty = ?', [id, phone, fname, lname, year, faculty], function (error, results) {
                 if (error) {
                     console.log("error ocurred while getting user details of " + id, error);
                     res.send({
@@ -250,9 +250,9 @@ router.get('/staff/staff_search_results', (req, res) => {
             });
         }
         else if (actor == "Student") {
-            fname = '%' +fname + '%';
+            fname = '%' + fname + '%';
             lname = '%' + lname;
-            database.query('SELECT * from Student where StudentID = ? OR PhoneNumber = ? OR Fullname LIKE ? OR Fullname LIKE ? OR StartYear = ? OR Faculty = ?',[id, phone, fname, lname,year, faculty], function(error, results) {
+            database.query('SELECT * from Student where StudentID = ? OR PhoneNumber = ? OR Fullname LIKE ? OR Fullname LIKE ? OR StartYear = ? OR Faculty = ?', [id, phone, fname, lname, year, faculty], function (error, results) {
                 if (error) {
                     console.log("error ocurred while getting user details of " + id, error);
                     res.send({
@@ -268,7 +268,7 @@ router.get('/staff/staff_search_results', (req, res) => {
                 }
             });
         }
-        
+
     }
 });
 module.exports = router;
@@ -279,8 +279,8 @@ module.exports = router;
 //Giao diện của Lecturer - chức năng xem thông tin cá nhân.
 router.get('/lecturer/lecturer_view_profile', (req, res) => {
     var id = localStorage.getItem("ID");
-    console.log("ID",id);
-    database.query('SELECT * from Lecturer where LecturerID = ?', id, function(error, results) {
+    console.log("ID", id);
+    database.query('SELECT * from Lecturer where LecturerID = ?', id, function (error, results) {
         if (error) {
             console.log("error ocurred while getting user details of " + id, error);
             res.send({
@@ -292,9 +292,9 @@ router.get('/lecturer/lecturer_view_profile', (req, res) => {
             let profile = "";
             for (let key in results[0]) {
                 console.log(results[0][key]);
-                profile = profile+ results[0][key] + "!";
+                profile = profile + results[0][key] + "!";
             }
-            res.render("lecturer/lecturer_view_profile",{user:profile});
+            res.render("lecturer/lecturer_view_profile", { user: profile });
         }
     });
 });
@@ -313,8 +313,8 @@ router.get('/lecturer/lecturer_change_profile', (req, res) => {
 // Lecturer - Xem danh sách các khóa học
 router.get('/lecturer/lecturer_view_course', (req, res) => {
     var id = localStorage.getItem("ID");
-    console.log("ID",id);
-    database.query('SELECT Course.SubjectID,Name,Credit,Year,Semester,Class from Course,Subject where Course.SubjectID=Subject.SubjectID and LecturerID = ?',id, function(error, results) {
+    console.log("ID", id);
+    database.query('SELECT Course.SubjectID,Name,Credit,Year,Semester,Class from Course,Subject where Course.SubjectID=Subject.SubjectID and LecturerID = ?', id, function (error, results) {
         if (error) {
             console.log("error ocurred while getting user details of " + id, error);
             res.send({
@@ -325,23 +325,48 @@ router.get('/lecturer/lecturer_view_course', (req, res) => {
             console.log(results);
             var temp = "";
             for (element in results) {
-                temp += results[element]["SubjectID"] + "||" + results[element]["Name"] + "||" + results[element]["Credit"] + "||" + results[element]["Year"] + "||" + results[element]["Semester"] + "||" + results[element]["Class"] +"  ";
+                temp += results[element]["SubjectID"] + "||" + results[element]["Name"] + "||" + results[element]["Credit"] + "||" + results[element]["Year"] + "||" + results[element]["Semester"] + "||" + results[element]["Class"] + "  ";
             }
-            console.log("temp: "+ temp)
+            console.log("temp: " + temp)
             res.render('lecturer/lecturer_view_course', { data: temp });
         }
     });
 });
 
 
-// Lecturer - Xem danh sách học sinh
 
+// Lecturer - Xem danh sách các khóa học
 router.get('/lecturer/lecturer_view_student', (req, res) => {
     var id = localStorage.getItem("ID");
-    console.log("ID",id);
-    database.query('SELECT Student.StudentID,Fullname,Midterm,Final,Total from Course,Subject,Student where Course.SubjectID=Subject.SubjectID and Student.StudentID=Course.StudentID and LecturerID = ?',id, function(error, results) {
+    console.log("ID", id);
+    database.query('SELECT Course.SubjectID,Name,Credit,Year,Semester,Class from Course,Subject where Course.SubjectID=Subject.SubjectID and LecturerID = ?', id, function (error, results) {
         if (error) {
             console.log("error ocurred while getting user details of " + id, error);
+            res.send({
+                "code": 400,
+                "failed": "error ocurred"
+            });
+        } else {
+            console.log(results);
+            var temp = "";
+            for (element in results) {
+                temp += results[element]["SubjectID"] + "||" + results[element]["Name"] + "||" + results[element]["Credit"] + "||" + results[element]["Year"] + "||" + results[element]["Semester"] + "||" + results[element]["Class"] + "  ";
+            }
+            console.log("temp: " + temp)
+            res.render('lecturer/lecturer_view_student', { data: temp });
+        }
+    });
+});
+
+// Lecturer - Xem danh sách học sinh
+router.get('/lecturer/lecturer_view_student2/:subid.:subyear.:subSemester.:subClass', (req, res) => {
+    console.log("SubID",req.params);
+    let{subid,subyear,subSemester,subClass}  = req.params;
+    var id = localStorage.getItem("ID");
+    let query = `SELECT * from Course c join Student s on c.StudentID = s.StudentID where c.LecturerID = '${id}' and c.SubjectID ='${subid}' and c.Year=${subyear} and c.Semester=${subSemester} and c.Class='${subClass}'`;
+    database.query(query,function (error, results,id) {
+        if (error) {
+            console.log("error ocurred while getting user details of ",id, error);
             res.send({
                 "code": 400,
                 "failed": "error ocurred"
@@ -352,8 +377,29 @@ router.get('/lecturer/lecturer_view_student', (req, res) => {
             for (element in results) {
                 temp += results[element]["StudentID"] + "||" + results[element]["Fullname"] + "||" + results[element]["Midterm"] + "||" + results[element]["Final"] + "||" + results[element]["Total"] + "  ";
             }
-            console.log("temp: "+ temp)
-            res.render('lecturer/lecturer_view_student', { data: temp });
+            console.log("temp: " + temp)
+            res.render('lecturer/lecturer_view_student2', { data: temp });
         }
     });
 });
+
+router.post('/lecturer/lecturer_view_student2/edit', (req, res) => {
+    let  { midterm, final, total,subId,year,semester,classId,studentId } = req.body;
+    var id = localStorage.getItem("ID");
+    let query = `Update Course SET Midterm =  ${midterm},Final=${final},Total=${total} where StudentID='${studentId}' and LecturerID = '${id}' and SubjectID = '${subId}'`
+    database.query(query,function (error, results,id) {
+        if (error) {
+            console.log("error ocurred while getting user details of ",id, error);
+            res.send({
+                "code": 400,
+                "failed": "error ocurred"
+            });
+        } else {
+            console.log(results);
+            res.send({
+                "code": 200,
+                "msg": "success"
+            });
+        }
+    });
+})
