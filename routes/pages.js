@@ -110,10 +110,10 @@ router.get('/staff/staff_view_profile', (req, res) => {
             for (let key in results[0]) {
                 if (key != "Password") {
                     console.log(results[0][key]);
-                    profile = profile+ results[0][key] + "!";
+                    profile = profile + results[0][key] + "!";
                 }
             }
-            res.render("staff/staff_view_profile",{user:profile});
+            res.render("staff/staff_view_profile", { user: profile });
         }
     });
 });
@@ -132,7 +132,14 @@ router.get('/staff/staff_manage_course', (req, res) => {
 
 // Giao diện của Staff - chức năng xem danh sách khóa học
 router.get('/staff/staff_view_courses', (req, res) => {
-    var query = 'SELECT SubjectID, Semester, Year, Class ' +
+    var url_parts = url.parse(req.url, true);
+    var data = url_parts.query;
+    var query = '';
+    if (data !== undefined) {
+        query = `DELETE FROM Course WHERE SubjectID = "${data["SubjectID"]}" and Class = "${data["Class"]}" and Year = ${data["Year"]} and Semester = ${data["Semester"]}`
+        database.query(query);
+    }
+    query = 'SELECT SubjectID, Semester, Year, Class ' +
         'FROM Course ' +
         'GROUP BY SubjectID, Semester, Year, Class ' +
         'ORDER BY Year DESC, Semester DESC, Class ASC, SubjectID ASC';
@@ -196,9 +203,9 @@ router.get('/staff/staff_search_results', (req, res) => {
     let dob = localStorage.getItem("DoB_Search");
     let faculty = localStorage.getItem("Faculty_Search");
     let actor = localStorage.getItem("Actor_Search");
-    
+
     if (!id && !fname && !lname && !phone && !year && !dob && faculty != "Choose Falcuty" && actor == "Student") {
-        database.query('SELECT * from Student where Student.Faculty = ?',[faculty], function(error, results) {
+        database.query('SELECT * from Student where Student.Faculty = ?', [faculty], function(error, results) {
             if (error) {
                 console.log("error ocurred while getting user details of " + id, error);
                 res.send({
@@ -215,7 +222,7 @@ router.get('/staff/staff_search_results', (req, res) => {
         });
     }
     if (!id && !fname && !lname && !phone && !year && !dob && faculty != "Choose Falcuty" && actor == "Lecturer") {
-        database.query('SELECT * from Lecturer where Lecturer.Faculty = ?',[faculty], function(error, results) {
+        database.query('SELECT * from Lecturer where Lecturer.Faculty = ?', [faculty], function(error, results) {
             if (error) {
                 console.log("error ocurred while getting user details of " + id, error);
                 res.send({
@@ -230,12 +237,11 @@ router.get('/staff/staff_search_results', (req, res) => {
                 res.render('staff/staff_search_results', { data: temp });
             }
         });
-    }
-    else {
+    } else {
         if (actor == "Lecturer") {
-            fname = '%' +fname + '%';
+            fname = '%' + fname + '%';
             lname = '%' + lname;
-            database.query('SELECT * from Lecturer where LecturerID = ? OR PhoneNumber = ? OR Fullname LIKE ? OR Fullname LIKE ? OR StartYear = ? OR Faculty = ?',[id, phone, fname, lname,year, faculty], function(error, results) {
+            database.query('SELECT * from Lecturer where LecturerID = ? OR PhoneNumber = ? OR Fullname LIKE ? OR Fullname LIKE ? OR StartYear = ? OR Faculty = ?', [id, phone, fname, lname, year, faculty], function(error, results) {
                 if (error) {
                     console.log("error ocurred while getting user details of " + id, error);
                     res.send({
@@ -250,11 +256,10 @@ router.get('/staff/staff_search_results', (req, res) => {
                     res.render('staff/staff_search_results', { data: temp });
                 }
             });
-        }
-        else if (actor == "Student") {
-            fname = '%' +fname + '%';
+        } else if (actor == "Student") {
+            fname = '%' + fname + '%';
             lname = '%' + lname;
-            database.query('SELECT * from Student where StudentID = ? OR PhoneNumber = ? OR Fullname LIKE ? OR Fullname LIKE ? OR StartYear = ? OR Faculty = ?',[id, phone, fname, lname,year, faculty], function(error, results) {
+            database.query('SELECT * from Student where StudentID = ? OR PhoneNumber = ? OR Fullname LIKE ? OR Fullname LIKE ? OR StartYear = ? OR Faculty = ?', [id, phone, fname, lname, year, faculty], function(error, results) {
                 if (error) {
                     console.log("error ocurred while getting user details of " + id, error);
                     res.send({
@@ -270,7 +275,8 @@ router.get('/staff/staff_search_results', (req, res) => {
                 }
             });
         }
-        
+
     }
 });
+
 module.exports = router;
