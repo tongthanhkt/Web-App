@@ -23,7 +23,7 @@
                 </div>
             </li>   
             <li>
-                <a ><button type="button" class="btn btn-outline-warning">Log out</button></a>
+                <a href="/"><button type="button" class="btn btn-outline-warning">Log out</button></a>
             </li>  
         </ul>
     </nav>
@@ -45,6 +45,7 @@
                             <th scope="col">Midterm</th>
                             <th scope="col">Final</th>
                             <th scope="col">Total</th>
+                            <th scope="col">Operate</th>
                         </tr>
                     </thead>
                     <tbody id="table-body"></tbody>
@@ -58,6 +59,9 @@
     </div>   
 
 <script type="text/javascript">
+    var url = window.location.href;
+    var parameter = url.split('?');
+    var value = parameter[1].split('&');
     var data = "{{data}}";
     data = data.split(" ");
     lecturer = [];
@@ -68,15 +72,21 @@
             temp = temp.split("|");
             if (!lecturer.includes(temp[0]))
                 lecturer.push(temp[0]);
-            var html = `<tr>
+            if (temp[1] != "None"){
+                var html = `<tr>
                             <th scope="row">${i+1}</th>
                             <td>${temp[1]}</td>
                             <td>Student</td>
                             <td>${temp[2]}</td>
                             <td>${temp[3]}</td>
                             <td>${temp[4]}</td>
+                            <td><a href="/staff/staff_course_detail?${value[0]}&${value[1]}&${value[2]}&${value[3]}&ID=${temp[1]}"><button type="button" class="btn buttonGo" >Remove</button></a></td>
                         </tr>`;
             document.getElementById("table-body").insertRow().innerHTML = html;
+            }
+            else{
+                index -= 1;
+            }
         }
     }
     for (i = 0; i < lecturer.length; i++){

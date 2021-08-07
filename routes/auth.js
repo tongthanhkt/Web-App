@@ -35,5 +35,12 @@ router.post('/staff/staff_change_password', authController.staff_change_password
 //Staff - chức năng Search Accounts
 router.post('/staff/staff_search_accounts', authController.staff_search_accounts);
 
+//Staff - chức năng Create Course
+router.post('/staff/staff_create_course', authController.staff_create_course);
+
+//Staff - chức năng Create Course with .csv files.
+router.post('/staff/staff_create_course_file', authController.staff_create_course_file);
+
+
 
 module.exports = router;

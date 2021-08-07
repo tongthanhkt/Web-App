@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=, initial-scale=1.0">
-    <title>HCMUS Moodle Mini</title>
+    <title>Course Management</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
     <link rel="stylesheet" href="/style.css">
 </head>
@@ -23,7 +23,7 @@
                 </div>
             </li>   
             <li>
-                <a ><button type="button" class="btn btn-outline-warning">Log out</button></a>
+                <a href="/"><button type="button" class="btn btn-outline-warning">Log out</button></a>
             </li>  
         </ul>
     </nav>
@@ -32,7 +32,7 @@
         <div class="row">
             <div class="card" id = "rcorners1">
                 <div class="card-body" style="text-align: center;background-color:#34675c;">
-                    <h3 class="card-title" style = "color: white">View Courses</h3>
+                    <h3 class="card-title" style = "color: white">Handle Courses</h3>
                     <p class="card-text">Print list of courses, choose a course to get more information.</p>
                     <a href="/staff/staff_view_courses" class="btn buttonGo" style = "color: white; font-weight: bolder">Go</a>
                 </div>
@@ -40,10 +40,11 @@
 
             <div class="card" id = "rcorners1">
                 <div class="card-body" style="text-align: center;background-color:#34675c;">
-                    <h3 class="card-title" style = "color: white">Add/Remove student/lecturer to a course</h3>
-                    <p class="card-text">Add/Remove one or many students/lecturers</p>
-                    <a href="#" class="btn buttonGo" style = "color: white; font-weight: bolder">Go</a>
+                    <h3 class="card-title" style = "color: white">Create Course</h3>
+                    <p class="card-text">Input SubjectID, Class, Lecturer to create course</p>
+                    <a href="/staff/staff_create_course" class="btn buttonGo" style = "color: white; font-weight: bolder">Go</a>
                 </div>
+            </div>
             </div>
         </div>
     </div>

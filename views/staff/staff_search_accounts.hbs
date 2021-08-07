@@ -23,7 +23,7 @@
                 </div>
             </li>   
             <li>
-                <a ><button type="button" class="btn btn-outline-warning">Log out</button></a>
+                <a href="/"><button type="button" class="btn btn-outline-warning">Log out</button></a>
             </li>  
         </ul>
     </nav>
@@ -51,7 +51,7 @@
     <div class="container mt-4" style = " width: 40%; margin-left: 50px; font-family:'Times New Roman', Times, serif; float:left">
         <div class="card" style = "border-radius: 25px;">
             <div class = "card-header">
-                Searching form 
+                Searching Form
             </div>
             <div class = "card-body">
                 <form action = '/auth/staff/staff_search_accounts' method = "POST">
@@ -93,11 +93,21 @@
                         <div class = "form-group">
                             <label for="faculty">Faculty:</label>
                             <select class="form-select" name="faculty" id="faculty">
-                                <option selected>Choose Falcuty</option>
-                                <option value="Information Technology">Information Technology</option>
-                                <option value="Physics">Physics</option>
-                                <option value="Chemists">Chemists</option>
+                                <option selected>Choose Faculty</option>
                             </select>
+                            <script type = "text/javascript">
+                                var select = document.getElementById("faculty");
+                                var data = "{{data}}";
+                                data = data.split("||");
+                            
+                                for (var i = 0; i < data.length - 1; i++){
+                                    var option = document.createElement("OPTION");
+                                    var txt = document.createTextNode(data[i]);
+                                    option.append(txt);
+                                    option.setAttribute("value", data[i]);
+                                    select.insertBefore(option, select.lastChild);
+                                }
+                            </script>
                         </div>
                     </p>
                     <p>

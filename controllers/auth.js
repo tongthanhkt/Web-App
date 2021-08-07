@@ -29,33 +29,31 @@ const bcrypt = require('bcryptjs');
 exports.login = (req, res) => {
     const actor_choice = req.body.exampleRadios;
     console.log(actor_choice);
-   
+
     // tương ứng với từng option mà ta sẽ nhảy tới trang login ứng với từng actor. (nhìn vào thì có thể các trang login này giống nhau nhưng thực chật lúc code hàm bên trong thì khác sẽ so sánh dựa trên type.)
     if (actor_choice == 'option1') { //option1 là Student., nếu đúng là option1 sẽ redirect (nhảy tới) trang login của student.
         res.status(200).redirect('/login_actors/login_student');
-    }
-    else if (actor_choice == 'option2') { // option 2 là Lecturer.
+    } else if (actor_choice == 'option2') { // option 2 là Lecturer.
         res.status(200).redirect("/login_actors/login_lecturer");
-    }
-    else if (actor_choice == 'option3') { // option3 là Staff
+    } else if (actor_choice == 'option3') { // option3 là Staff
         res.status(200).redirect("/login_actors/login_staff");
     }
 }
 
 
 //Login for student.
-exports.login_student = async (req, res) => {
+exports.login_student = async(req, res) => {
     try {
-        const {id, password } = req.body;
+        const { id, password } = req.body;
         console.log(req.body);
         if (!id || !password) { //trường hợp để trống không nhập gì mà nhấn Submit.
             return res.status(400).render('../views/login_actors/login_student', {
                 message: 'Please provide an id and password.'
             })
         }
-        
+
         // Truy vấn để lấy dữ liệu type =1 là học sinh.
-        database.query('Select *from Account where Account.Type = 1 AND id = ?', [id], async (error, results) => {
+        database.query('Select *from Account where Account.Type = 1 AND id = ?', [id], async(error, results) => {
             console.log(results);
             //!result: tức là sau khi tủy vấn không có kết quả trả về.
             //!await bcrypt:  là dùng để so sánh password.
@@ -63,13 +61,11 @@ exports.login_student = async (req, res) => {
                 return res.status(400).render('../views/login_actors/login_student', {
                     message: 'ID or Password is incorrect'
                 })
-            }
-            else if (!(await bcrypt.compareSync(password, results[0].Password))) { // result[0] là bởi vì chỉ có 1 kết quả trả về tương ứng với 1 id.
+            } else if (!(await bcrypt.compareSync(password, results[0].Password))) { // result[0] là bởi vì chỉ có 1 kết quả trả về tương ứng với 1 id.
                 return res.status(400).render('../views/login_actors/login_student', {
                     message: 'ID or Password is incorrect'
                 })
-            }
-            else { // login thành công.
+            } else { // login thành công.
                 console.log('Login successful');
                 console.log(results[0].ID);
                 return res.status(200).redirect('../../student/student_UI');
@@ -82,7 +78,7 @@ exports.login_student = async (req, res) => {
 
 
 //Login for Lecturer.
-exports.login_lecturer = async (req, res) => {
+exports.login_lecturer = async(req, res) => {
     try {
         const { id, password } = req.body;
         console.log(req.body);
@@ -91,9 +87,9 @@ exports.login_lecturer = async (req, res) => {
                 message: 'Please provide an id and password.'
             })
         }
-        
+
         // Truy vấn để lấy dữ liệu type =1 là học sinh.
-        database.query('Select *from Account where Account.Type = 2 AND id = ?', [id], async (error, results) => {
+        database.query('Select *from Account where Account.Type = 2 AND id = ?', [id], async(error, results) => {
             console.log(results);
             //!result: tức là sau khi tủy vấn không có kết quả trả về.
             //!await bcrypt:  là dùng để so sánh password.
@@ -102,13 +98,11 @@ exports.login_lecturer = async (req, res) => {
                 return res.status(400).render('../views/login_actors/login_lecturer', {
                     message: 'ID or Password is incorrect'
                 })
-            }
-            else if (!(await bcrypt.compareSync(password, results[0].Password))) { // result[0] là bởi vì chỉ có 1 kết quả trả về tương ứng với 1 id.
+            } else if (!(await bcrypt.compareSync(password, results[0].Password))) { // result[0] là bởi vì chỉ có 1 kết quả trả về tương ứng với 1 id.
                 return res.status(400).render('../views/login_actors/login_lecturer', {
                     message: 'ID or Password is incorrect'
                 })
-            }
-            else { // login thành công.
+            } else { // login thành công.
                 console.log('Login successful');
                 console.log(results[0].ID);
                 return res.status(200).redirect('../../lecturer/lecturer_UI');
@@ -122,20 +116,20 @@ exports.login_lecturer = async (req, res) => {
 
 
 //Login for staff.
-exports.login_staff = async (req, res) => {
+exports.login_staff = async(req, res) => {
     try {
         const { id, password } = req.body;
         localStorage.setItem("ID", id);
-        localStorage.setItem("Password",password);
+        localStorage.setItem("Password", password);
         console.log(req.body);
         if (!id || !password) { //trường hợp để trống không nhập gì mà nhấn Submit.
             return res.status(400).render('../views/login_actors/login_staff', {
                 message: 'Please provide an id and password.'
             })
         }
-        
+
         // Truy vấn để lấy dữ liệu type =1 là học sinh.
-        database.query('Select *from Account where Account.Type = 3 AND ID = ?', [id], async (error, results) => {
+        database.query('Select *from Account where Account.Type = 3 AND ID = ?', [id], async(error, results) => {
             console.log(results);
             //!result: tức là sau khi tủy vấn không có kết quả trả về.
             //!await bcrypt:  là dùng để so sánh password.
@@ -144,13 +138,11 @@ exports.login_staff = async (req, res) => {
                 return res.status(400).render('../views/login_actors/login_staff', {
                     message: 'ID or Password is incorrect'
                 })
-            }
-            else if (!(await bcrypt.compareSync(password, results[0].Password))) { // result[0] là bởi vì chỉ có 1 kết quả trả về tương ứng với 1 id.
+            } else if (!(await bcrypt.compareSync(password, results[0].Password))) { // result[0] là bởi vì chỉ có 1 kết quả trả về tương ứng với 1 id.
                 return res.status(400).render('../views/login_actors/login_staff', {
                     message: 'ID or Password is incorrect'
                 })
-            }
-            else { // login thành công.
+            } else { // login thành công.
                 console.log('Login successful');
                 return res.status(200).redirect('../../staff/staff_UI');
             }
@@ -162,34 +154,32 @@ exports.login_staff = async (req, res) => {
 
 
 // //Staff- chức năng Remove Account - Option 1 (Remove 1 Account)
-exports.staff_remove_account_option1 = async (req, res) => {
+exports.staff_remove_account_option1 = async(req, res) => {
     try {
-        const {id} = req.body;
+        const { id } = req.body;
         console.log(req.body);
         if (!id) { //trường hợp để trống không nhập gì mà nhấn Remove.
             return res.status(400).render('../views/staff/staff_remove_account_option1', {
                 message: 'Please provide an id.'
             })
         }
-        
-        
-        database.query('Select *from Account where ID = ?', [id], async (error, results) => {
+
+
+        database.query('Select *from Account where ID = ?', [id], async(error, results) => {
             console.log(results);
             //!result: tức là sau khi truy vấn không có kết quả trả về.
             if (results.length == 0) {
                 return res.status(400).render('../views/staff/staff_remove_account_option1', {
                     message: 'This ID does not exist.'
                 })
-            }
-            else if (results[0].ID == id && results[0].Type != 3) { // tìm thấy acôunt có trong database
+            } else if (results[0].ID == id && results[0].Type != 3) { // tìm thấy acôunt có trong database
                 if (results[0].Type == 1) {
                     database.query(`DELETE FROM Student WHERE StudentID = ?`, id, function(err) {
                         if (err) {
                             return console.error(err.message);
                         }
                     });
-                }
-                else if (results[0].Type == 2) {
+                } else if (results[0].Type == 2) {
                     console.log(id);
                     database.query(`DELETE FROM Lecturer WHERE LecturerID = ?`, id, function(err) {
                         if (err) {
@@ -200,16 +190,14 @@ exports.staff_remove_account_option1 = async (req, res) => {
                 database.query(`DELETE FROM Account WHERE ID = ?`, id, function(err) {
                     if (err) {
                         return console.error(err.message);
-                    }
-                    else {
+                    } else {
                         console.log('Remove successfully');
                         return res.status(200).render('../views/staff/staff_remove_account_option1'), {
                             message: 'Remove Account Successfully.'
                         };
                     }
                 });
-            }
-            else if (results[0].Type == 3){
+            } else if (results[0].Type == 3) {
                 return res.status(400).render('../views/staff/staff_remove_account_option1', {
                     message: 'You cannot remove a Staff account.'
                 })
@@ -226,46 +214,46 @@ exports.staff_remove_account_option1 = async (req, res) => {
 
 
 
-function makePromiseFunc (idx) {
-    return new Promise(function (res, rej) {
+function makePromiseFunc(idx) {
+    return new Promise(function(res, rej) {
         console.log(idx);
-        database.query (
-            "DELETE FROM Student WHERE StudentID = ?; DELETE FROM Account WHERE ID =?", [idx, idx], function (error) {
+        database.query(
+            "DELETE FROM Student WHERE StudentID = ?; DELETE FROM Account WHERE ID =?", [idx, idx],
+            function(error) {
                 if (error) {
-                    return console.error(error.message);   
-            }
-        });
+                    return console.error(error.message);
+                }
+            });
     });
 }
-  
+
 
 exports.staff_remove_account_option2 = (req, res) => {
     try {
         console.log(req.body);
         let id = req.body.data;
-    
+
         for (let i = 1; i < id.length - 1; i++) {
             id[i].split('\r');
             id[i] = id[i].slice(0, -1);
         }
         var p = new Promise((resolve, reject) => {
             setTimeout(() => {
-              resolve('foo');
+                resolve('foo');
             }, 3000);
         });
 
         for (var i = 1; i < id.length; i++) {
-        // Assign variables to the same
-            p = p.then (makePromiseFunc (id[i]));
+            // Assign variables to the same
+            p = p.then(makePromiseFunc(id[i]));
         }
         if (true) {
             return res.render('../views/staff/staff_remove_account_option2', {
                 message: 'Remove successfully!'
             })
         }
-        
-    }
-    catch (error) {
+
+    } catch (error) {
         console.log(error);
     }
 }
@@ -392,88 +380,85 @@ exports.staff_account_file = async(req, res) => {
 
 
 //STAFF - CHANGE PROFILE.
-function Update_Data (id, info, index) {
-    return new Promise(function (res, rej) {
+function Update_Data(id, info, index) {
+    return new Promise(function(res, rej) {
         if (info != '') {
             if (index == 0) {
-                database.query (
-                    "Update Staff Set Fullname = ? WHERE StaffID = ?", [info, id], function (error) {
+                database.query(
+                    "Update Staff Set Fullname = ? WHERE StaffID = ?", [info, id],
+                    function(error) {
                         if (error) {
-                            return console.error(error.message);   
-                    }
-                });
-            }
-            else if (index == 1) {
-                database.query (
-                    "Update Staff Set PhoneNumber = ? WHERE StaffID = ?", [info, id], function (error) {
+                            return console.error(error.message);
+                        }
+                    });
+            } else if (index == 1) {
+                database.query(
+                    "Update Staff Set PhoneNumber = ? WHERE StaffID = ?", [info, id],
+                    function(error) {
                         if (error) {
-                            return console.error(error.message);   
-                    }
-                });
-            }
-            else if (index == 2) {
-                database.query (
-                    "Update Staff Set StartYear = ? WHERE StaffID = ?", [info, id], function (error) {
+                            return console.error(error.message);
+                        }
+                    });
+            } else if (index == 2) {
+                database.query(
+                    "Update Staff Set StartYear = ? WHERE StaffID = ?", [info, id],
+                    function(error) {
                         if (error) {
-                            return console.error(error.message);   
-                    }
-                });
-            }
-            else if (index == 3) {
-                database.query (
-                    "Update Staff Set DateOfBirth = ? WHERE StaffID = ?", [info, id], function (error) {
+                            return console.error(error.message);
+                        }
+                    });
+            } else if (index == 3) {
+                database.query(
+                    "Update Staff Set DateOfBirth = ? WHERE StaffID = ?", [info, id],
+                    function(error) {
                         if (error) {
-                            return console.error(error.message);   
-                    }
-                });
-            }
-            else if (index == 4) {
-                database.query (
-                    "Update Staff Set Address = ? WHERE StaffID = ?", [info, id], function (error) {
+                            return console.error(error.message);
+                        }
+                    });
+            } else if (index == 4) {
+                database.query(
+                    "Update Staff Set Address = ? WHERE StaffID = ?", [info, id],
+                    function(error) {
                         if (error) {
-                            return console.error(error.message);   
-                    }
-                });
+                            return console.error(error.message);
+                        }
+                    });
             }
         }
     });
 }
 
-exports.staff_change_profile = async (req, res) => {
+exports.staff_change_profile = async(req, res) => {
     try {
         console.log(req.body);
         var id = localStorage.getItem("ID");
         console.log(id);
         const { fullname, phone, year, DoB, address } = req.body;
-        
+
         var p = new Promise((resolve, reject) => {
             setTimeout(() => {
-              resolve('foo');
+                resolve('foo');
             }, 3000);
         });
 
-        if (!fullname && !phone && !year && !DoB && !address){
+        if (!fullname && !phone && !year && !DoB && !address) {
             return res.status(400).render('../views/staff/staff_change_profile', {
                 message: 'Provide at least 1 data!'
             })
-        }
-        else {
+        } else {
             if (phone.length > 0 && phone.length < 10) {
                 return res.status(400).render('../views/staff/staff_change_profile', {
                     message: 'Phone has 10 numbers'
                 })
-            }
-            else if (year.length > 0 && year.length < 4) {
+            } else if (year.length > 0 && year.length < 4) {
                 return res.status(400).render('../views/staff/staff_change_profile', {
                     message: 'Wrong start year!'
                 })
-            }
-            else if (year.length == 4 && (Number(year) < 1995 || Number(year)> 2021)) {
+            } else if (year.length == 4 && (Number(year) < 1995 || Number(year) > 2021)) {
                 return res.status(400).render('../views/staff/staff_change_profile', {
                     message: 'Wrong start year!'
                 })
-            }
-            else {
+            } else {
                 let data = [];
                 data.push(fullname);
                 data.push(phone);
@@ -481,8 +466,8 @@ exports.staff_change_profile = async (req, res) => {
                 data.push(DoB);
                 data.push(address);
                 for (var i = 0; i < data.length; i++) {
-                // Assign variables to the same
-                    p = p.then (Update_Data (id,data[i], i));
+                    // Assign variables to the same
+                    p = p.then(Update_Data(id, data[i], i));
                 }
                 return res.status(400).render('../views/staff/staff_change_profile', {
                     message: 'Update successfully!'
@@ -538,21 +523,21 @@ exports.staff_change_password = async(req, res) => {
 exports.staff_search_accounts = async(req, res) => {
     console.log(req.body)
     const { id, first_name, last_name, phone, year, DoB, faculty, actor } = req.body
-    if (!id && !first_name && !last_name && !phone && !year && !DoB && faculty == "Choose Faculty" && actor =="Choose Actor") {
+    if (!id && !first_name && !last_name && !phone && !year && !DoB && faculty == "Choose Faculty" && actor == "Choose Actor") {
         return res.status(400).render('../views/staff/staff_search_accounts', {
             message: 'Provide at least 1 data!'
         })
     }
 
-    if (actor =="Choose Actor") {
+    if (actor == "Choose Actor") {
         return res.status(400).render('../views/staff/staff_search_accounts', {
-            message:  'Please choose actor to search!'
+            message: 'Please choose actor to search!'
         })
     }
-    
+
     if (phone.length > 0 && phone.length < 10) {
         return res.status(400).render('../views/staff/staff_search_accounts', {
-            message:  'Phone number has 10 numbers!'
+            message: 'Phone number has 10 numbers!'
         })
     }
 
@@ -564,7 +549,119 @@ exports.staff_search_accounts = async(req, res) => {
     localStorage.setItem('DoB_Search', DoB);
     localStorage.setItem('Faculty_Search', faculty);
     localStorage.setItem('Actor_Search', actor);
-    
+
     return res.render('../views/staff/staff_search_accounts_fillup')
 
+}
+
+
+
+
+exports.staff_change_password = async(req, res) => {
+    const password = localStorage.getItem('Password');
+    const id = localStorage.getItem('ID');
+    const { oldPassword, newPassword, passwordConfirm } = req.body;
+
+    if (!oldPassword || !newPassword || !passwordConfirm) { // trường hợp nhập không đủ thông tin
+        return res.status(400).render('../views/staff/staff_change_password', {
+            message: 'Please provide full necessary information.'
+        })
+    }
+
+    if (oldPassword !== password) { // trường hợp nhập sai mật khẩu hiện tại
+        return res.status(400).render('../views/staff/staff_change_password', {
+            message: 'Old password does not match.'
+        })
+    }
+
+    if (newPassword !== passwordConfirm) { // trường hợp nhập sai mật khẩu xác nhận
+        return res.status(400).render('../views/staff/staff_change_password', {
+            message: 'Password confirm does not match.'
+        })
+    }
+
+    let hashedPassword = await bcrypt.hashSync(newPassword, 8);
+
+    database.query('Update Account set Password = ? where ID = ?', [hashedPassword, id]);
+    database.query('Update Staff set Password = ? where StaffID = ?', [hashedPassword, id]);
+    localStorage.setItem("Password", newPassword);
+    return res.status(400).render('../views/staff/staff_change_password', {
+        message: 'Changed successfully!'
+    })
+}
+
+
+
+
+
+
+// Staff - Create Course:
+exports.staff_create_course = async(req, res) => {
+    console.log(req.body);
+    var faculty = req.body.faculty;
+    var subject = req.body.subject;
+    var lecturer = req.body.lecturer;
+    var Semester = req.body.Semester;
+    var Class = req.body.Class;
+    var year = req.body.year;
+    var student_id = "None";
+
+    if (faculty == 'Choose Faculty' || lecturer == 'Choose Lecturer' || subject == 'Choose Subject' || Semester == 'Choose Semester' || Class == '' || year == 'Choose Year')
+        return res.status(400).render('../views/staff/staff_create_course', {
+            message: 'Please provide all necessary data!'
+        })
+    year = new Date().getFullYear();
+    console.log(student_id, faculty,subject, lecturer, Semester, Class, year);
+    database.query('Insert into Course set ?', { StudentID: student_id, LecturerID: lecturer, SubjectID: subject, Semester: Semester, Year: year, Midterm: -1, Final: -1, Total: -1, Class: Class }, (error, results) => {
+        if (error) {
+            console.log(error)
+        } else {
+            return res.redirect('/staff/staff_create_course');
+        }
+    })
+}
+
+function CreateCourses(lecturer, subject, Semester, Class, year) {
+    return new Promise(function(res, rej) {
+        student_id = "None";
+        console.log(lecturer, subject, Semester, Class, year);
+        database.query('Insert into Course set ?', { StudentID: student_id, LecturerID: lecturer, SubjectID: subject, Semester: Semester, Year: year, Midterm: -1, Final: -1, Total: -1, Class: Class },
+            function(error) {
+                if (error) {
+                    return console.error(error.message);
+                }
+            });
+    });
+}
+
+// Staff - Create Course with .csv Files:
+exports.staff_create_course_file = async(req, res) => {
+    try {
+        let info = req.body.data;
+
+        for (let i = 0; i < info.length; i++) {
+            if (i % 6 == 5) {
+                info[i].split('\r');
+                info[i] = info[i].slice(0, -1);
+            }
+        }
+        var p = new Promise((resolve, reject) => {
+            setTimeout(() => {
+                resolve('foo');
+            }, 3000);
+        });
+
+        for (var i = 6; i < info.length - 1; i+=6) {
+            // Assign variables to the same
+            p = p.then(CreateCourses(info[i+1], info[i+2], info[i+3], info[i+4], info[i+5] ));
+        }
+        if (true) {
+            return res.render('../views/staff/staff_remove_account_option2', {
+                message: 'Remove successfully!'
+            })
+        }
+
+    } catch (error) {
+        console.log(error);
+    }
 }
