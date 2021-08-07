@@ -161,7 +161,12 @@ router.get('/staff/staff_view_courses', (req, res) => {
 router.get('/staff/staff_course_detail', (req, res) => {
     var url_parts = url.parse(req.url, true);
     var data = url_parts.query;
-    var query = 'SELECT LecturerID, StudentID, Midterm, Final, Total ' +
+    var query = ""
+    if (data["ID"] !== undefined) {
+        query = `DELETE FROM Course WHERE SubjectID = "${data["SubjectID"]}" and Class = "${data["Class"]}" and Year = ${data["Year"]} and Semester = ${data["Semester"]} and StudentID = ${data["ID"]}`
+        database.query(query);
+    }
+    query = 'SELECT LecturerID, StudentID, Midterm, Final, Total ' +
         'FROM Course ' +
         `WHERE SubjectID = "${data["SubjectID"]}" and Class = "${data["Class"]}" and Year = ${data["Year"]} and Semester = ${data["Semester"]} ` +
         'ORDER BY LecturerID, StudentID';
