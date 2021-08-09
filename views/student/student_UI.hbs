@@ -11,19 +11,32 @@
       crossorigin="anonymous"
     />
     <link rel="stylesheet" href="/style.css" />
+    
   </head>
   <body>
     <nav>
-      <h2><a href="../../student/student_UI"><button
-            type="button"
-            class="btn btn-outline-warning"
-          >Home Page</button></a></h2>
-      <ul>
-        <li>
-          <a href="/"><button type="button" class="btn btn-outline-warning">Log
-              out</button></a>
-        </li>
+     
+            <h2><a href="../../student/student_UI"><button
+                  type="button"
+                  class="btn btn-outline-warning"
+                >Home Page</button></a>
+            </h2>
+        <ul>    
+          <li>
+                <div class="dropdown" >
+                <a><button type="button" class="btn btn-outline-warning" >Profile</button></a>
+                    <div class="dropdown-content" style = "border-radius: 5px; padding: 5px">
+                        <a href="/student/student_view_profile"><button type="button" class="btn btn-outline-warning">View Profile</button></a>
+                        <a href="/student/student_change_profile"><button type="button" class="btn btn-outline-warning">Change Profile</button></a>
+                        <a href="/student/student_change_password"><button type="button" class="btn btn-outline-warning">Change Password</button></a>
+                    </div>
+                </div>
+            </li>   
+          <li>
+            <a href="/"><button type="button" class="btn btn-outline-warning">Log out</button></a>
+          </li>
       </ul>
+     
     </nav>
 
     <div class="row ">

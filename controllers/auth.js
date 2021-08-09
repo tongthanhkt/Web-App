@@ -677,3 +677,170 @@ exports.find = (req, res) => {
     );
   });
 };
+
+//Chang profile student
+function Update_Data(id, info, index) {
+  return new Promise(function (res, rej) {
+    if (info != "") {
+      if (index == 0) {
+        database.query(
+          "Update Student Set Fullname = ? WHERE StudentID = ?",
+          [info, id],
+          function (error) {
+            if (error) {
+              return console.error(error.message);
+            }
+          }
+        );
+      } else if (index == 1) {
+        database.query(
+          "Update Student Set PhoneNumber = ? WHERE StudentID = ?",
+          [info, id],
+          function (error) {
+            if (error) {
+              return console.error(error.message);
+            }
+          }
+        );
+      } else if (index == 2) {
+        database.query(
+          "Update Student Set StartYear = ? WHERE StudentID = ?",
+          [info, id],
+          function (error) {
+            if (error) {
+              return console.error(error.message);
+            }
+          }
+        );
+      } else if (index == 3) {
+        database.query(
+          "Update Student Set DateOfBirth = ? WHERE StudentID = ?",
+          [info, id],
+          function (error) {
+            if (error) {
+              return console.error(error.message);
+            }
+          }
+        );
+      } else if (index == 4) {
+        database.query(
+          "Update Student Set Faculty = ? WHERE StudentID = ?",
+          [info, id],
+          function (error) {
+            if (error) {
+              return console.error(error.message);
+            }
+          }
+        );
+      }
+    }
+  });
+}
+
+exports.student_change_profile = async (req, res) => {
+  try {
+    console.log(req.body);
+    var id = localStorage.getItem("ID");
+    console.log(id);
+    const { fullname, phone, year, DoB, faculty } = req.body;
+
+    var p = new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve("foo");
+      }, 3000);
+    });
+
+    if (!fullname && !phone && !year && !DoB && !address) {
+      return res.status(400).render("../views/student/student_change_profile", {
+        message: "Provide at least 1 data!",
+      });
+    } else {
+      if (phone.length > 0 && phone.length < 10) {
+        return res
+          .status(400)
+          .render("../views/student/student_change_profile", {
+            message: "Phone has 10 numbers",
+          });
+      } else if (year.length > 0 && year.length < 4) {
+        return res
+          .status(400)
+          .render("../views/student/student_change_profile", {
+            message: "Wrong start year!",
+          });
+      } else if (
+        year.length == 4 &&
+        (Number(year) < 1995 || Number(year) > 2021)
+      ) {
+        return res
+          .status(400)
+          .render("../views/student/student_change_profile", {
+            message: "Wrong start year!",
+          });
+      } else {
+        let data = [];
+        data.push(fullname);
+        data.push(phone);
+        data.push(year);
+        data.push(DoB);
+        data.push(faculty);
+        for (var i = 0; i < data.length; i++) {
+          // Assign variables to the same
+          p = p.then(Update_Data(id, data[i], i));
+        }
+        return res
+          .status(400)
+          .render("../views/student/student_change_profile", {
+            message: "Update successfully!",
+          });
+      }
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+//Student- Change Password;
+// thay đổi mật khẩu
+exports.student_change_password = async (req, res) => {
+  const password = localStorage.getItem("Password");
+
+  const id = localStorage.getItem("ID");
+  const { oldPassword, newPassword, passwordConfirm } = req.body;
+
+  if (!oldPassword || !newPassword || !passwordConfirm) {
+    // trường hợp nhập không đủ thông tin
+    return res.status(400).render("../views/student/student_change_password", {
+      message: "Please provide full necessary information.",
+    });
+  }
+  console.log(oldPassword);
+  console.log(password);
+  if (oldPassword !== password) {
+    // trường hợp nhập sai mật khẩu hiện tại
+    return res.status(400).render("../views/student/student_change_password", {
+      message: "Old password does not match.",
+    });
+  }
+
+  if (newPassword !== passwordConfirm) {
+    // trường hợp nhập sai mật khẩu xác nhận
+    return res.status(400).render("../views/student/student_change_password", {
+      message: "Password confirm does not match.",
+    });
+  }
+
+  let hashedPassword = await bcrypt.hashSync(newPassword, 8);
+
+  database.query("Update Account set Password = ? where ID = ?", [
+    hashedPassword,
+    id,
+  ]);
+  database.query("Update Student set Password = ? where StudentID = ?", [
+    hashedPassword,
+    id,
+  ]);
+  localStorage.setItem("Password", newPassword);
+  return res.status(400).render("../views/student/student_change_password", {
+    message: "Changed successfully!",
+  });
+};
