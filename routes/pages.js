@@ -335,7 +335,7 @@ router.get('/lecturer/lecturer_view_course', (req, res) => {
 
 
 
-// Lecturer - Xem danh sách các khóa học
+// Lecturer - Xem danh sách các khóa học khi bấm vào chức năng view class/course
 router.get('/lecturer/lecturer_view_student', (req, res) => {
     var id = localStorage.getItem("ID");
     console.log("ID", id);
@@ -358,7 +358,31 @@ router.get('/lecturer/lecturer_view_student', (req, res) => {
     });
 });
 
-// Lecturer - Xem danh sách học sinh
+
+// Lecturer - Xem danh sách các khóa học khi bấm vào chức năng edit student grade
+router.get('/lecturer/lecturer_edit_student', (req, res) => {
+    var id = localStorage.getItem("ID");
+    console.log("ID", id);
+    database.query('SELECT Course.SubjectID,Name,Credit,Year,Semester,Class from Course,Subject where Course.SubjectID=Subject.SubjectID and LecturerID = ?', id, function (error, results) {
+        if (error) {
+            console.log("error ocurred while getting user details of " + id, error);
+            res.send({
+                "code": 400,
+                "failed": "error ocurred"
+            });
+        } else {
+            console.log(results);
+            var temp = "";
+            for (element in results) {
+                temp += results[element]["SubjectID"] + "||" + results[element]["Name"] + "||" + results[element]["Credit"] + "||" + results[element]["Year"] + "||" + results[element]["Semester"] + "||" + results[element]["Class"] + "  ";
+            }
+            console.log("temp: " + temp)
+            res.render('lecturer/lecturer_edit_student', { data: temp });
+        }
+    });
+});
+
+// Lecturer - Xem danh sách học sinh khi bấm vào View Class/Course 
 router.get('/lecturer/lecturer_view_student2/:subid.:subyear.:subSemester.:subClass', (req, res) => {
     console.log("SubID",req.params);
     let{subid,subyear,subSemester,subClass}  = req.params;
@@ -383,10 +407,37 @@ router.get('/lecturer/lecturer_view_student2/:subid.:subyear.:subSemester.:subCl
     });
 });
 
-router.post('/lecturer/lecturer_view_student2/edit', (req, res) => {
+
+
+// Lecturer - Xem danh sách học sinh khi bấm vào Chức năng Edit's student grade
+router.get('/lecturer/lecturer_edit_student2/:subid.:subyear.:subSemester.:subClass', (req, res) => {
+    console.log("SubID",req.params);
+    let{subid,subyear,subSemester,subClass}  = req.params;
+    var id = localStorage.getItem("ID");
+    let query = `SELECT * from Course c join Student s on c.StudentID = s.StudentID where c.LecturerID = '${id}' and c.SubjectID ='${subid}' and c.Year=${subyear} and c.Semester=${subSemester} and c.Class='${subClass}'`;
+    database.query(query,function (error, results,id) {
+        if (error) {
+            console.log("error ocurred while getting user details of ",id, error);
+            res.send({
+                "code": 400,
+                "failed": "error ocurred"
+            });
+        } else {
+            console.log(results);
+            var temp = "";
+            for (element in results) {
+                temp += results[element]["StudentID"] + "||" + results[element]["Fullname"] + "||" + results[element]["Midterm"] + "||" + results[element]["Final"] + "||" + results[element]["Total"] + "  ";
+            }
+            console.log("temp: " + temp)
+            res.render('lecturer/lecturer_edit_student2', { data: temp });
+        }
+    });
+});
+
+router.post('/lecturer/lecturer_edit_student2/edit', (req, res) => {
     let  { midterm, final, total,subId,year,semester,classId,studentId } = req.body;
     var id = localStorage.getItem("ID");
-    let query = `Update Course SET Midterm =  ${midterm},Final=${final},Total=${total} where StudentID='${studentId}' and LecturerID = '${id}' and SubjectID = '${subId}'`
+    let query = `Update Course SET Midterm =  ${midterm},Final=${final},Total=${total} where StudentID='${studentId}' and LecturerID = '${id}' and SubjectID = '${subId}' and Year=${year} and Semester=${semester} and Class='${classId}'`
     database.query(query,function (error, results,id) {
         if (error) {
             console.log("error ocurred while getting user details of ",id, error);

@@ -54,6 +54,7 @@
                                 <th scope="col">Midterm</th>
                                 <th scope="col">Final</th>
                                 <th scope="col">Total</th>
+                                <th scope="col">Change</th>
                             </tr>
                         </thead>
                         <tbody id="table-body"></tbody>
@@ -74,24 +75,70 @@
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
         <script type="text/javascript">
-            var data = "{{data}}";
-            data = data.split("  ");
-            for (i = 0; i < data.length; i++) {
-                if (data[i] != 0) {
-                    temp = data[i];
-                    temp = temp.split("||");
-                    var html = `<tr>
+            $(document).ready(function () {
+
+                $("#dialogSuccess").hide();
+                var data = "{{data}}";
+                data = data.split("  ");
+                for (i = 0; i < data.length; i++) {
+                    if (data[i] != 0) {
+                        temp = data[i];
+                        temp = temp.split("||");
+                        var html = `<tr>
                             <th scope="row">${i + 1}</th>
                             <td>${temp[0]} <input type="hidden" value='${temp[0]}' id="StudentId"></td>
-                            <td>${temp[1]} </td>
-                            <td>${temp[2]} </td>
-                            <td>${temp[3]}  </td>
-                            <td>${temp[4]}  </td>
+                            <td>${temp[1]}</td>
+                            <td><input type="text" value='${temp[2]}' id="Midterm"></td>
+                            <td><input type="text" value='${temp[3]}' id="Final"></td>
+                            <td><input type="text" value='${temp[4]}' id="Total"></td>
+                            <td><input type="submit" value="Change"  id="submitEdit"></td>
                         </tr>`;
-                    document.getElementById("table-body").insertRow().innerHTML = html;
+                        document.getElementById("table-body").insertRow().innerHTML = html;
+                    }
                 }
-            }
+
+                $("#submitEdit").click(function (e) {
+
+                    let midterm = document.getElementById('Midterm').value;
+                    let final = document.getElementById("Final").value;
+                    let total = document.getElementById("Total").value;
+                    let studentId = document.getElementById("StudentId").value;
+                    let str = window.location.href.split("/")[5].split(".");
+                    let subId = str[0];
+                    let year = str[1];
+                    let semester = str[2];
+                    let classId = str[3];
+
+                    let obj = { midterm, final, total, subId, year, semester, classId, studentId };
+                    let url = window.location.origin + "/lecturer/lecturer_edit_student2/edit";
+                    $.ajax({
+                        url: url,
+                        type: 'post',
+                        contentType: 'application/x-www-form-urlencoded',
+                        data: obj,
+                        success: function (data, textStatus, jQxhr) {
+                            if (data.code == 200) {
+                                $("#dialogSuccess").show();
+                                document.getElementById("msgSuccess").innerHTML = "UPDATE SUCCESSFULLY ! ";
+                            } else {
+                                $("#dialogSuccess").show();
+                                document.getElementById("msgSuccess").innerHTML = "FAIL TO UPDATE ! ";
+                            }
+                        },
+                        error: function (jqXhr, textStatus, errorThrown) {
+                            console.log(errorThrown);
+                        }
+                    });
+                    e.preventDefault();
+                });
+            });
         </script>
+
+        <div id="dialogSuccess" title="Basic dialog">
+            <p id="msgSuccess" style="color: blue;"></p>
+        </div>
+
+
 </body>
 
 </html>
