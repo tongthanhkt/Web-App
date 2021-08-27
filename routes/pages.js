@@ -115,5 +115,6 @@ router.get("/student/student_change_profile", (req, res) => {
 });
 const courseController = require("../controllers/auth");
 router.get("/student/view_course", courseController.view_course);
+router.get("/student/view_grade", courseController.view_grade);
 router.post("/", courseController.find);
 module.exports = router;
