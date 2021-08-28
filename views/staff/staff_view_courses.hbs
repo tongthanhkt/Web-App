@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=, initial-scale=1.0">
+    <title>View Courses</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <nav>
+        <h2><a href="../../staff/staff_UI"><button type="button" class="btn btn-outline-warning">Home Page</button></a></h2>
+        <ul>
+            <li>
+                <div class="dropdown" >
+                <a><button type="button" class="btn btn-outline-warning" >Profile</button></a>
+                    <div class="dropdown-content" style = "border-radius: 5px; padding: 5px">
+                        <a href="/staff/staff_view_profile"><button type="button" class="btn btn-outline-warning">View Profile</button></a>
+                        <a href="/staff/staff_change_profile"><button type="button" class="btn btn-outline-warning">Change Profile</button></a>
+                        <a href="/staff/staff_change_password"><button type="button" class="btn btn-outline-warning">Change Password</button></a>
+                    </div>
+                </div>
+            </li>   
+            <li>
+                <a href="/"><button type="button" class="btn btn-outline-warning">Log out</button></a>
+            </li>  
+        </ul>
+    </nav>
+    
+    <div class="container mt-4">
+        
+        <div class="card" style = "border-radius: 25px;  font-family: Times, "Times New Roman",Helvetica, sans-serif;">
+            <div class = "card-header">
+                List of all courses
+            </div>
+
+            <div class = "card-body">
+                <table class="table table-bordered" id="table" >
+                    <thead>
+                        <tr style = "background-color: #9ed499; font-family: Times, "Times New Roman",Helvetica, sans-serif;">
+                            <th scope="col">No</th>
+                            <th scope="col">Subject ID</th>
+                            <th scope="col">Class</th>
+                            <th scope="col">Year</th>
+                            <th scope="col">Semester</th>
+                            <th scope="col">Detail</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body"></tbody>
+                </table>
+            </div>
+        </div>
+
+        {{#if message}}   
+            <h4 class = "alert alert-danger mt-4">{{message}}</h4>
+        {{/if}}  
+    </div>    
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+
+<script type="text/javascript">
+    var data = "{{data}}";
+    data = data.split(" ");
+    for (i = 0; i < data.length; i++){
+        if (data[i] != 0){
+            temp = data[i];
+            temp = temp.split("|");
+            var html = `<tr>
+                            <th scope="row">${i+1}</th>
+                            <td>${temp[0]}</td>
+                            <td>${temp[1]}</td>
+                            <td>${temp[2]}</td>
+                            <td>${temp[3]}</td>
+                            <td>
+                                <div class="dropdown" >
+                                <a><button type="button" class="btn buttonGo" >Operate</button></a>
+                                    <div class="dropdown-content" style = "border-radius: 5px; padding: 5px">
+                                       <a class="btn btn-outline-primary" style="color: blue; margin-bottom: 10px" href="/staff/staff_course_detail?SubjectID=${temp[0]}&Class=${temp[1]}&Year=${temp[2]}&Semester=${temp[3]}">View</a>
+                                       <a class="btn btn-outline-primary" style="color: blue" href="/staff/staff_view_courses?SubjectID=${temp[0]}&Class=${temp[1]}&Year=${temp[2]}&Semester=${temp[3]}">Remove</a> 
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>`;
+            document.getElementById("table-body").insertRow().innerHTML = html;
+        }
+    }   
+</script>
+
+</body>
+</html>

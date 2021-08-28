@@ -1,0 +1,120 @@
+
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="/upload_csv.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+  <script src="papaparse.min.js"></script>
+  <title>Create Course .csv</title>
+  <style>
+	.pdfobject-container { height: 500px;}
+	.pdfobject { border: 1px solid #666;}
+  </style>
+</head>
+<body>
+    <nav>
+        <a href="../../staff/staff_UI"><button type="button" class="btn btn-outline-warning">Home Page</button></a>
+                <div class="dropdown" style = "padding-left: 20cm;">
+                <a><button type="button" class="btn btn-outline-warning" >Profile</button></a>
+                    <div class="dropdown-content" style = "border-radius: 5px; padding: 5px">
+                        <a href="/staff/staff_view_profile"><button type="button" class="btn btn-outline-warning">View Profile</button></a>
+                        <a href="/staff/staff_change_profile"><button type="button" class="btn btn-outline-warning">Change Profile</button></a>
+                        <a href="/staff/staff_change_password"><button type="button" class="btn btn-outline-warning">Change Password</button></a>
+                    </div>
+                </div>
+                &ensp;
+                &ensp;
+                <a href="/"><button type="button" class="btn btn-outline-warning">Log out</button></a>
+    </nav>
+
+    <script type="text/javascript">
+            function Upload() {
+                const course_info = [];
+                var fileUpload = document.getElementById("fileUpload");
+                var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.csv|.txt)$/;
+                if (regex.test(fileUpload.value.toLowerCase())) {
+                    if (typeof (FileReader) != "undefined") {
+                        var reader = new FileReader();
+                        reader.onload = function (e) {
+                        var table = document.createElement("table");
+                        var rows = e.target.result.split("\n");
+                        for (var i = 0; i < rows.length; i++) {
+                            var cells = rows[i].split(",");
+                            if (cells.length >= 1) {
+                                var row = table.insertRow(-1);
+                                    for (var j = 0; j < cells.length; j++) {
+                                        var cell = row.insertCell(-1);
+                                        cell.innerHTML = cells[j];
+                                        course_info.push(cells[j]);
+                                        table.appendChild( document.createTextNode( '\u00A0' ) );
+                                }
+                            }
+                        }
+                        var dvCSV = document.getElementById("dvCSV");
+                        dvCSV.appendChild(table);
+                    
+                        $.post('/auth/staff/staff_create_course_file', $.param({ data: course_info }, true), function(data) {});
+                    }
+                    reader.readAsText(fileUpload.files[0]);
+                } else {
+                    alert("This browser does not support HTML5.");
+                }
+            } else {
+                alert("Please upload a valid CSV file.");
+            }
+        }
+    </script>
+
+   <body style = "background-color: #86ac41"></body>
+        <div class="container mt-4" style="padding:10px 20px; background-color: #fff; border-radius: 15px; width: 50%; margin-left:50px; float:left">
+	    <div id="header"></div>
+	    <div class="well">
+		<div class="row">
+            <form>
+                <form class="form-inline">
+                    <div class="form-group">
+                        <label for="fileUpload">Upload a CSV formatted file:</label>
+                        &ensp;
+                        &ensp;
+                        <input type="file" id="fileUpload"  class="form-control"  name = "fileUpload" accept=".csv" required />
+                    </div>
+                    <div class="form-group">
+                    &ensp; 
+                        <button type="button" id="upload" value="Upload" class="btn btn-primary" onclick = "Upload()">Upload File</button>
+                        &ensp;
+                        &ensp;
+                        &ensp;
+                        &ensp;
+                        &ensp;
+                        <a href = "/staff/staff_create_course_file"><button type="button" class="btn btn-primary" >Create All</button></a>
+                </form>
+		    </form>
+        </div>
+		</div>
+        <hr />
+        <div id="dvCSV">
+        </div>
+        <a href = "/staff/staff_manage_course"><button type="button" class="btn btn-outline-warning">Go Back</button></a>
+        </div>
+    </body>
+    <body>
+        <div class="container mt-4" style="padding:20px 10px; background-color: #fff; border-radius: 25px; width: 80%; margin-left: 120px; font-family:'Times New Roman', Times, serif; float:inherit">
+            <div class="card">
+                <div class = "card-header" style= "background-color: #edcb6d;">
+                    <p style ="text-decoration: underline">
+                        Instruction:
+                    </p>
+                    <p>
+                        First: Choose a .csv file from your computer.
+                        <br/>
+                        Second: Click "Upload File" to view all ID in .csv file.
+                        <br/>
+                        Third: Click "Remove All" to remove accounts from the database, accounts removed cannot sign in ever again.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </body>
+</body>
+</html>

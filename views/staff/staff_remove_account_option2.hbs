@@ -13,19 +13,20 @@
     </style>
 </head>
 <body>
-    <body>
-        <nav  style = "background-color:#324851; color: #fff; padding: 30px 60px; display: flex; justify-content: space-between">
-            <h2><a href="../../staff/staff_UI"><button type="button" class="btn btn-outline-warning">Home Page</button></a></h2>
-            <ul style = "display: flex; justify-content: space-around; align-items: center;">
-                <li style = "list-style: none">
-                <a href = "#"><button type="button" class="btn btn-outline-warning">View Profile</button></a>
-                </li>   
-                <li style = "list-style: none">
-                <a style = "color: #fff; text-decoration: wavy; font-weight: bold; padding: 5px 8px; "><button type="button" class="btn btn-outline-warning">Log out</button></a>
-                </li>  
-            </ul>
-        </nav>
-    </body>
+    <nav>
+        <a href="../../staff/staff_UI"><button type="button" class="btn btn-outline-warning">Home Page</button></a>
+                <div class="dropdown" style = "padding-left: 20cm;">
+                <a><button type="button" class="btn btn-outline-warning" >Profile</button></a>
+                    <div class="dropdown-content" style = "border-radius: 5px; padding: 5px">
+                        <a href="/staff/staff_view_profile"><button type="button" class="btn btn-outline-warning">View Profile</button></a>
+                        <a href="/staff/staff_change_profile"><button type="button" class="btn btn-outline-warning">Change Profile</button></a>
+                        <a href="/staff/staff_change_password"><button type="button" class="btn btn-outline-warning">Change Password</button></a>
+                    </div>
+                </div>
+                &ensp;
+                &ensp;
+                <a href="/"><button type="button" class="btn btn-outline-warning">Log out</button></a>
+    </nav>
 
     <script type="text/javascript">
             function Upload() {
@@ -67,37 +68,55 @@
         }
     </script>
 
-   <body style = "background-color: #86ac41">
-        <div class="container mt-4" style="padding:20px 20px; background-color: #fff; border-radius: 15px">
+   <body style = "background-color: #86ac41"></body>
+        <div class="container mt-4" style="padding:10px 20px; background-color: #fff; border-radius: 15px; width: 50%; margin-left:50px; float:left">
 	    <div id="header"></div>
 	    <div class="well">
 		<div class="row">
             <form>
-		    <form class="form-inline">
-			    <div class="form-group">
-			    <label for="fileUpload">Upload a CSV formatted file:</label>
-                &ensp;
-                &ensp;
-			    <input type="file" id="fileUpload"  class="form-control"  name = "fileUpload" accept=".csv" required />
-			    </div>
-                <div class="form-group">
-                &ensp; 
-			    <button type="button" id="upload" value="Upload" class="btn btn-primary" onclick = "Upload()">Upload File</button>
-			    &ensp;
-                &ensp;
-                &ensp;
-                &ensp;
-                &ensp;
-                <a href = "/staff/staff_remove_account_option2"><button type="button" class="btn btn-primary" >Remove All</button></a>
+                <form class="form-inline">
+                    <div class="form-group">
+                        <label for="fileUpload">Upload a CSV formatted file:</label>
+                        &ensp;
+                        &ensp;
+                        <input type="file" id="fileUpload"  class="form-control"  name = "fileUpload" accept=".csv" required />
+                    </div>
+                    <div class="form-group">
+                    &ensp; 
+                        <button type="button" id="upload" value="Upload" class="btn btn-primary" onclick = "Upload()">Upload File</button>
+                        &ensp;
+                        &ensp;
+                        &ensp;
+                        &ensp;
+                        &ensp;
+                        <a href = "/staff/staff_remove_account_option2"><button type="button" class="btn btn-primary" >Remove All</button></a>
                 </form>
-                </div>
 		    </form>
+        </div>
 		</div>
         <hr />
         <div id="dvCSV">
         </div>
-        <br/>
         <a href = "/staff/staff_remove_account"><button type="button" class="btn btn-outline-warning">Go Back</button></a>
+        </div>
+    </body>
+    <body>
+        <div class="container mt-4" style="padding:20px 10px; background-color: #fff; border-radius: 25px; width: 80%; margin-left: 120px; font-family:'Times New Roman', Times, serif; float:inherit">
+            <div class="card">
+                <div class = "card-header" style= "background-color: #edcb6d;">
+                    <p style ="text-decoration: underline">
+                        Instruction:
+                    </p>
+                    <p>
+                        First: Choose a .csv file from your computer.
+                        <br/>
+                        Second: Click "Upload File" to view all ID in .csv file.
+                        <br/>
+                        Third: Click "Remove All" to remove accounts from the database, accounts removed cannot sign in ever again.
+                    </p>
+                </div>
+            </div>
+        </div>
     </body>
 </body>
 </html>

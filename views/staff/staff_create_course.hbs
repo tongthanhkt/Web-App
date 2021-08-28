@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=, initial-scale=1.0">
+    <title>Create Course Form</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <nav>
+        <h2><a href="../../staff/staff_UI"><button type="button" class="btn btn-outline-warning">Home Page</button></a></h2>
+        <ul>
+            <li>
+                <div class="dropdown" >
+                <a><button type="button" class="btn btn-outline-warning" >Profile</button></a>
+                    <div class="dropdown-content" style = "border-radius: 5px; padding: 5px">
+                        <a href="/staff/staff_view_profile"><button type="button" class="btn btn-outline-warning">View Profile</button></a>
+                        <a href="/staff/staff_change_profile"><button type="button" class="btn btn-outline-warning">Change Profile</button></a>
+                        <a href="/staff/staff_change_password"><button type="button" class="btn btn-outline-warning">Change Password</button></a>
+                    </div>
+                </div>
+            </li>   
+            <li>
+                <a href="/"><button type="button" class="btn btn-outline-warning">Log out</button></a>
+            </li>  
+        </ul>
+    </nav>
+
+    <div class="container mt-4" style = " width: 40%; margin-left: 50px; font-family:'Times New Roman', Times, serif; float:left">
+        <div class="card" style = "border-radius: 25px;">
+            <div class = "card-header">
+                Create Course:
+            </div>
+            <div class = "card-body">
+                <form action = '/auth/staff/staff_create_course' method = "POST">
+                    <p>
+                        <div class = "form-group">
+                            <label for="faculty">Faculty:</label>
+                            <select class="form-select" name="faculty" id="faculty" onclick= "Faculty(); this.onclick = null;" style = "background-color: #a4bfde">
+                                <option selected>Choose Faculty</option>
+                            </select>
+                            <script type = "text/javascript">
+                                function Faculty(){
+                                    var select = document.getElementById("faculty");
+                                    var data = "{{data}}";
+                                    data = data.split("--");
+                                    var data1 = data[0];
+                                    data1 = data1.split("||");
+                                    var faculty = [];
+                                    for (var i = 0; i < data1.length; i+=3){
+                                        if (faculty.includes(data1[i]) == false){
+                                            faculty.push(data1[i]);
+                                        }
+                                    }
+                                    
+                                    for (var i = 0; i < faculty.length - 1; i++){
+                                        var option = document.createElement("OPTION");
+                                        var txt = document.createTextNode(faculty[i]);
+                                        option.append(txt);
+                                        option.setAttribute("value", faculty[i]);
+                                        select.insertBefore(option, select.lastChild);
+                                    }
+                                    
+                                }
+                            </script>
+                        </div>
+                    </p>
+                    
+                    <p>
+                        <div class = "form-group">
+                            <label for="subject">Subject:</label>
+                            <select class="form-select"  name="subject" id="subject" onclick = "Subject(); this.onclick = null;" style = "background-color: #a4bfde">
+                                <option selected>Choose Subject</option>
+                            </select>
+                            <script type = "text/javascript">
+                                function Subject(){
+                                    var select = document.getElementById("subject");
+                                    var data = "{{data}}";
+                                    data = data.split("--");
+                                    var data2 = data[1];
+                                    data2 = data2.split("||");
+                                   
+                                    var subject = [];
+                                    for (var i = 0; i < data2.length; i++) {
+                                        if(subject.includes(data2[i]) == false){
+                                            subject.push(data2[i]);
+                                        }
+                                    }
+
+                                    for (var i = 0; i < subject.length - 1; i+=2){
+                                        var option = document.createElement("OPTION");
+                                        var txt = document.createTextNode(subject[i]+" - "+subject[i+1]);
+                                        option.append(txt);
+                                        option.setAttribute("value", subject[i]);
+                                        select.insertBefore(option, select.lastChild);
+                                    } 
+                                }
+                            </script>
+                        </div>
+                    </p>
+
+                    <p>
+                        <div class = "form-group">
+                            <label for="lecturer">Lecturer:</label>
+                            <select class="form-select"  name="lecturer" id="lecturer" onclick="Len_info();" style = "background-color: #a4bfde">
+                                <option selected>Choose Lecturer</option>
+                            </select>
+                            <script type = "text/javascript">
+                                function Len_info(){
+                                    var select = document.getElementById("lecturer");
+                                    var data = "{{data}}";
+                                    data = data.split("--");
+                                    var data1 = data[0];
+                                    data1 = data1.split("||");
+                                    var faculty = document.getElementById("faculty").value;
+                                    var lec_info = [];
+                                    for (var i = 0; i < data1.length; i+=3) {
+                                        if (data1[i] == faculty && lec_info.includes(data1[i + 1]) == false){
+                                            lec_info.push(data1[i+1]);
+                                            lec_info.push(data1[i+2]);
+                                        }
+                                    }
+
+                                    for (var i = 0; i < lec_info.length; i+=2){
+                                        var option = document.createElement("OPTION");
+                                        var txt = document.createTextNode(lec_info[i]+" - "+lec_info[i+1]);
+                                        option.append(txt);
+                                        option.setAttribute("value", lec_info[i]);
+                                        select.insertBefore(option, select.lastChild);
+                                    }
+
+                                }
+                            </script>
+                        </div>
+                    </p>
+
+
+                    <p>
+                        <div class = "form-group">
+                            <label for="Semester">Semester:</label>
+                            <select class="form-select"  name="Semester" id="Semester" style = "background-color: #a4bfde">
+                                <option selected>Choose Semester</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                            </select>
+                        </div>
+                    </p>
+
+                    <p>
+                        <div class = "form-group">
+                            <label for="Class">Class:</label>
+                            <input type="text" class = "form-control" id = "Class" name = "Class" style = "background-color: #a4bfde">
+                        </div>
+                    </p>
+
+                    <p>
+                        <div class = "form-group">
+                            <label for="Year">Year:</label>
+                            <select class="form-select"  name="Year" id="Year" onclick="Current_Year(); this.onclick = null;" style = "background-color: #a4bfde">
+                                <option selected>Choose Year </option>
+                            </select>
+                            <script type = "text/javascript">
+                                function Current_Year(){
+                                    var select = document.getElementById("Year");
+                                    let date =  new Date().getFullYear();
+                                    var option = document.createElement("OPTION");
+                                    var txt = document.createTextNode(date);
+                                    option.append(txt);
+                                    option.setAttribute("value", Year);
+                                    select.insertBefore(option, select.lastChild);
+                                }
+                            </script>
+                        </div>
+                    </p>
+                    <button type="submit" class="btn btn-primary">Create</button>
+                    <a href="/staff/staff_create_course_file"><button type="button" class="btn btn-warning" style = "margin-left: 50px">Upload</button></a>
+                    <a href = "/staff/staff_manage_course"><button type="button" class="btn btn-outline-warning" style = "margin-left: 50px">Go Back</button></a>
+                    
+                </form>
+            </div>
+
+        </div>     
+        {{#if message}}   
+            <h4 class = "alert alert-danger mt-4">{{message}}</h4>
+        {{/if}}  
+    </div>
+    <body>
+        <div class="container mt-4" style = " width: 75%; margin-left: 120px; font-family:'Times New Roman', Times, serif; float:inherit">
+            <div class="card">
+                <div class = "card-header" style= "background-color: #edcb6d;">
+                    <p style ="text-decoration: underline">
+                        Instruction:
+                    </p>
+                    <p style ="text-decoration: none">
+                        1> Choose which Faculty you want to crate a course.
+                    </p>
+                    <p style ="text-decoration: none">
+                        2> Choose a class.
+                    </p>
+                    <p style ="text-decoration: none">
+                        3> Choose which lecture to be in charge of the class above.
+                    </p>
+                    <p style ="text-decoration: none">
+                        4> Choose semester of present year.
+                    </p>
+                    <p style ="text-decoration: none">
+                        4> Click "Create" to create this course in the database.
+                    </p>
+                    <p style ="text-decoration: none">
+                        5> New course created allow student to assign for.
+                    </p>
+                    <p style ="text-decoration: none">
+                        6> If you get Error Message, go back the page before to enter again.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+
+</body> 
+</html>

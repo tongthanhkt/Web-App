@@ -10,6 +10,7 @@ const fs = require("fs");
 //LOCAL STORAGE:
 var LocalStorage = require("node-localstorage").LocalStorage;
 localStorage = new LocalStorage("./scratch");
+
 //MYSQL
 const mysql = require("mysql");
 const database = mysql.createPool({
@@ -64,16 +65,15 @@ exports.login_student = async (req, res) => {
         //!await bcrypt:  là dùng để so sánh password.
         if (results.length == 0) {
           return res.status(400).render("../views/login_actors/login_student", {
-            message: "Nothing",
+            message: "ID or Password is incorrect",
           });
         } else if (!(await bcrypt.compareSync(password, results[0].Password))) {
           // result[0] là bởi vì chỉ có 1 kết quả trả về tương ứng với 1 id.
           return res.status(400).render("../views/login_actors/login_student", {
-            message: "Password is incorrect",
+            message: "ID or Password is incorrect",
           });
         } else {
           // login thành công.
-          localStorage.setItem("ID", id);
           console.log("Login successful");
           console.log(results[0].ID);
           return res.status(200).redirect("../../student/student_UI");
@@ -136,6 +136,8 @@ exports.login_lecturer = async (req, res) => {
 exports.login_staff = async (req, res) => {
   try {
     const { id, password } = req.body;
+    localStorage.setItem("ID", id);
+    localStorage.setItem("Password", password);
     console.log(req.body);
     if (!id || !password) {
       //trường hợp để trống không nhập gì mà nhấn Submit.
@@ -304,7 +306,7 @@ exports.staff_remove_account_option2 = (req, res) => {
 };
 
 // tạo tài khoản bằng form
-exports.account_form = async (req, res) => {
+exports.staff_account_form = async (req, res) => {
   try {
     const {
       id,
@@ -328,7 +330,7 @@ exports.account_form = async (req, res) => {
       !type
     ) {
       // trường hợp nhập không đủ thông tin
-      return res.status(400).render("../views/staff/account_form", {
+      return res.status(400).render("../views/staff/staff_account_form", {
         message: "Please provide full necessary information of account.",
       });
     }
@@ -338,11 +340,11 @@ exports.account_form = async (req, res) => {
       [id],
       async (error, results) => {
         if (results.length > 0) {
-          return res.status(400).render("../views/staff/account_form", {
+          return res.status(400).render("../views/staff/staff_account_form", {
             message: "Account has already existed",
           });
         } else if (password !== passwordConfirm) {
-          return res.status(400).render("../views/staff/account_form", {
+          return res.status(400).render("../views/staff/staff_account_form", {
             message: "Passwords do not match",
           });
         }
@@ -370,9 +372,11 @@ exports.account_form = async (req, res) => {
               if (error) {
                 console.log(error);
               } else {
-                return res.status(400).render("../views/staff/account_form", {
-                  message: "Account created successfully!",
-                });
+                return res
+                  .status(400)
+                  .render("../views/staff/staff_account_form", {
+                    message: "Account created successfully!",
+                  });
               }
             }
           );
@@ -397,9 +401,11 @@ exports.account_form = async (req, res) => {
               if (error) {
                 console.log(error);
               } else {
-                return res.status(400).render("../views/staff/account_form", {
-                  message: "Account created successfully!",
-                });
+                return res
+                  .status(400)
+                  .render("../views/staff/staff_account_form", {
+                    message: "Account created successfully!",
+                  });
               }
             }
           );
@@ -412,7 +418,7 @@ exports.account_form = async (req, res) => {
 };
 
 // tạo tài khoản bằng csv
-exports.account_file = async (req, res) => {
+exports.staff_account_file = async (req, res) => {
   try {
     let info = []; // lưu thông tin trong csv
     fs.createReadStream(req.body.file) // đọc csv
@@ -514,7 +520,7 @@ exports.account_file = async (req, res) => {
           }
         }
 
-        return res.status(400).render("../views/staff/account_file", {
+        return res.status(400).render("../views/staff/staff_account_file", {
           message: `Created successfully!`,
         });
       });
@@ -567,6 +573,16 @@ function Update_Data(id, info, index) {
             }
           }
         );
+      } else if (index == 4) {
+        database.query(
+          "Update Staff Set Address = ? WHERE StaffID = ?",
+          [info, id],
+          function (error) {
+            if (error) {
+              return console.error(error.message);
+            }
+          }
+        );
       }
     }
   });
@@ -577,7 +593,7 @@ exports.staff_change_profile = async (req, res) => {
     console.log(req.body);
     var id = localStorage.getItem("ID");
     console.log(id);
-    const { fullname, phone, year, DoB } = req.body;
+    const { fullname, phone, year, DoB, address } = req.body;
 
     var p = new Promise((resolve, reject) => {
       setTimeout(() => {
@@ -585,7 +601,7 @@ exports.staff_change_profile = async (req, res) => {
       }, 3000);
     });
 
-    if (!fullname && !phone && !year && !DoB) {
+    if (!fullname && !phone && !year && !DoB && !address) {
       return res.status(400).render("../views/staff/staff_change_profile", {
         message: "Provide at least 1 data!",
       });
@@ -611,6 +627,7 @@ exports.staff_change_profile = async (req, res) => {
         data.push(phone);
         data.push(year);
         data.push(DoB);
+        data.push(address);
         for (var i = 0; i < data.length; i++) {
           // Assign variables to the same
           p = p.then(Update_Data(id, data[i], i));
@@ -868,6 +885,246 @@ exports.view_grade = (req, res) => {
         }
       );
     });
+  } catch (error) {
+    console.log(error);
+  }
+};
+//Staff- Change Password;
+// thay đổi mật khẩu
+exports.staff_change_password = async (req, res) => {
+  const password = localStorage.getItem("Password");
+  const id = localStorage.getItem("ID");
+  const { oldPassword, newPassword, passwordConfirm } = req.body;
+
+  if (!oldPassword || !newPassword || !passwordConfirm) {
+    // trường hợp nhập không đủ thông tin
+    return res.status(400).render("../views/staff/staff_change_password", {
+      message: "Please provide full necessary information.",
+    });
+  }
+
+  if (oldPassword !== password) {
+    // trường hợp nhập sai mật khẩu hiện tại
+    return res.status(400).render("../views/staff/staff_change_password", {
+      message: "Old password does not match.",
+    });
+  }
+
+  if (newPassword !== passwordConfirm) {
+    // trường hợp nhập sai mật khẩu xác nhận
+    return res.status(400).render("../views/staff/staff_change_password", {
+      message: "Password confirm does not match.",
+    });
+  }
+
+  let hashedPassword = await bcrypt.hashSync(newPassword, 8);
+
+  database.query("Update Account set Password = ? where ID = ?", [
+    hashedPassword,
+    id,
+  ]);
+  database.query("Update Staff set Password = ? where StaffID = ?", [
+    hashedPassword,
+    id,
+  ]);
+  localStorage.setItem("Password", newPassword);
+  return res.status(400).render("../views/staff/staff_change_password", {
+    message: "Changed successfully!",
+  });
+};
+
+exports.staff_search_accounts = async (req, res) => {
+  console.log(req.body);
+  const { id, first_name, last_name, phone, year, DoB, faculty, actor } =
+    req.body;
+  if (
+    !id &&
+    !first_name &&
+    !last_name &&
+    !phone &&
+    !year &&
+    !DoB &&
+    faculty == "Choose Faculty" &&
+    actor == "Choose Actor"
+  ) {
+    return res.status(400).render("../views/staff/staff_search_accounts", {
+      message: "Provide at least 1 data!",
+    });
+  }
+
+  if (actor == "Choose Actor") {
+    return res.status(400).render("../views/staff/staff_search_accounts", {
+      message: "Please choose actor to search!",
+    });
+  }
+
+  if (phone.length > 0 && phone.length < 10) {
+    return res.status(400).render("../views/staff/staff_search_accounts", {
+      message: "Phone number has 10 numbers!",
+    });
+  }
+
+  localStorage.setItem("ID_Search", id);
+  localStorage.setItem("FName_Search", first_name);
+  localStorage.setItem("LName_Search", last_name);
+  localStorage.setItem("Phone_Search", phone);
+  localStorage.setItem("Year_Search", year);
+  localStorage.setItem("DoB_Search", DoB);
+  localStorage.setItem("Faculty_Search", faculty);
+  localStorage.setItem("Actor_Search", actor);
+
+  return res.render("../views/staff/staff_search_accounts_fillup");
+};
+
+exports.staff_change_password = async (req, res) => {
+  const password = localStorage.getItem("Password");
+  const id = localStorage.getItem("ID");
+  const { oldPassword, newPassword, passwordConfirm } = req.body;
+
+  if (!oldPassword || !newPassword || !passwordConfirm) {
+    // trường hợp nhập không đủ thông tin
+    return res.status(400).render("../views/staff/staff_change_password", {
+      message: "Please provide full necessary information.",
+    });
+  }
+
+  if (oldPassword !== password) {
+    // trường hợp nhập sai mật khẩu hiện tại
+    return res.status(400).render("../views/staff/staff_change_password", {
+      message: "Old password does not match.",
+    });
+  }
+
+  if (newPassword !== passwordConfirm) {
+    // trường hợp nhập sai mật khẩu xác nhận
+    return res.status(400).render("../views/staff/staff_change_password", {
+      message: "Password confirm does not match.",
+    });
+  }
+
+  let hashedPassword = await bcrypt.hashSync(newPassword, 8);
+
+  database.query("Update Account set Password = ? where ID = ?", [
+    hashedPassword,
+    id,
+  ]);
+  database.query("Update Staff set Password = ? where StaffID = ?", [
+    hashedPassword,
+    id,
+  ]);
+  localStorage.setItem("Password", newPassword);
+  return res.status(400).render("../views/staff/staff_change_password", {
+    message: "Changed successfully!",
+  });
+};
+
+// Staff - Create Course:
+exports.staff_create_course = async (req, res) => {
+  console.log(req.body);
+  var faculty = req.body.faculty;
+  var subject = req.body.subject;
+  var lecturer = req.body.lecturer;
+  var Semester = req.body.Semester;
+  var Class = req.body.Class;
+  var year = req.body.year;
+  var student_id = "None";
+
+  if (
+    faculty == "Choose Faculty" ||
+    lecturer == "Choose Lecturer" ||
+    subject == "Choose Subject" ||
+    Semester == "Choose Semester" ||
+    Class == "" ||
+    year == "Choose Year"
+  )
+    return res.status(400).render("../views/staff/staff_create_course", {
+      message: "Please provide all necessary data!",
+    });
+  year = new Date().getFullYear();
+  console.log(student_id, faculty, subject, lecturer, Semester, Class, year);
+  database.query(
+    "Insert into Course set ?",
+    {
+      StudentID: student_id,
+      LecturerID: lecturer,
+      SubjectID: subject,
+      Semester: Semester,
+      Year: year,
+      Midterm: -1,
+      Final: -1,
+      Total: -1,
+      Class: Class,
+    },
+    (error, results) => {
+      if (error) {
+        console.log(error);
+      } else {
+        return res.redirect("/staff/staff_create_course");
+      }
+    }
+  );
+};
+
+function CreateCourses(lecturer, subject, Semester, Class, year) {
+  return new Promise(function (res, rej) {
+    student_id = "None";
+    console.log(lecturer, subject, Semester, Class, year);
+    database.query(
+      "Insert into Course set ?",
+      {
+        StudentID: student_id,
+        LecturerID: lecturer,
+        SubjectID: subject,
+        Semester: Semester,
+        Year: year,
+        Midterm: -1,
+        Final: -1,
+        Total: -1,
+        Class: Class,
+      },
+      function (error) {
+        if (error) {
+          return console.error(error.message);
+        }
+      }
+    );
+  });
+}
+
+// Staff - Create Course with .csv Files:
+exports.staff_create_course_file = async (req, res) => {
+  try {
+    let info = req.body.data;
+
+    for (let i = 0; i < info.length; i++) {
+      if (i % 6 == 5) {
+        info[i].split("\r");
+        info[i] = info[i].slice(0, -1);
+      }
+    }
+    var p = new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve("foo");
+      }, 3000);
+    });
+
+    for (var i = 6; i < info.length - 1; i += 6) {
+      // Assign variables to the same
+      p = p.then(
+        CreateCourses(
+          info[i + 1],
+          info[i + 2],
+          info[i + 3],
+          info[i + 4],
+          info[i + 5]
+        )
+      );
+    }
+    if (true) {
+      return res.render("../views/staff/staff_remove_account_option2", {
+        message: "Remove successfully!",
+      });
+    }
   } catch (error) {
     console.log(error);
   }
