@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=, initial-scale=1.0">
+    <title>View Course</title>
+    <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x"
+    crossorigin="anonymous">
+    <link
+    rel="stylesheet"
+    href="/style.css">
+</head>
+<body>
+    <nav>
+        <h2><a href="../../student/student_UI"><button type="button" class="btn btn-outline-warning">Home Page</button></a></h2>
+        <ul>
+            <li>
+                <a href="/"><button type="button" class="btn btn-outline-warning">Log out</button></a>
+            </li>  
+        </ul>
+    </nav>
+
+    <body style = "background-color:#16bffd">
+        <div class="container mt-4">
+        <div class="card">
+            <div class = "card-body">
+                <div class="container">
+                    <table class="table table-bordered table-hover">
+                        <thead class="thead-dark">
+                            <tr>
+                            <th scope="col" style="text-align: center">Subject ID</th>
+                            <th scope="col" style="text-align: center">Class ID</ths>
+                            <th scope="col" style="text-align: center">Semester</th>
+                            <th scope="col" style="text-align: center">Year</th>
+                            <th scope="col" style="text-align: center">Midterm</th>
+                            <th scope="col" style="text-align: center">Final</th>
+                            <th scope="col" style="text-align: center">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each rows}}
+                            <tr>
+                                <th scope="row" style="text-align: center">{{this.SubjectID}}</th>
+
+                                <td style="text-align: center">{{this.Class}}</td>
+                                <td style="text-align: center">{{this.Semester}}</td>
+                                <td style="text-align: center">{{this.Year}}</td>
+                                <td style="text-align: center">{{this.Midterm}}</td>
+                                <td style="text-align: center">{{this.Final}}</td>
+                                <td style="text-align: center">{{this.Total}}</td>
+                            </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            </div>     
+            {{#if message}}   
+                <h4 class = "alert alert-danger mt-4">{{message}}</h4>
+            {{/if}}  
+    </div>
+        <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"
+        ></script>
+    </body>
+</body>
+</html>
