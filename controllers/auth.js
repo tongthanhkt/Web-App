@@ -537,7 +537,7 @@ function Update_Data(id, info, index) {
     if (info != "") {
       if (index == 0) {
         database.query(
-          "Update Staff Set Fullname = ? WHERE StaffID = ?",
+          "Update Staff Set FullName = ? WHERE StaffID = ?",
           [info, id],
           function (error) {
             if (error) {

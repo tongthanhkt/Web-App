@@ -1,4 +1,4 @@
 ﻿ID,Fullname,PhoneNumber,StartYear,DateOfBirth,Password,Faculty,Type
-19127003,Nguyen Van Lan,0 928456369,2019,2001 05 22,12345,Information Technology,Student
-19127004,Tran Dinh Van,0 928856370,2019,2001 03 18,12345,Information Technology,Student
-19127005,Do Nhat Khoa,0 925996371,2019,2000 04 28,12345,Physics,Student
+L005,Nguyen Van Tien,0 928456369,2010,1980 05 22,12345,Information Technology,Lecturer
+L006,Tran Dinh Thang,0 928856370,2010,1980 03 18,12345,Information Technology,Lecturer
+L007,Do Nhat Khoi,0 925996371,2010,1982 04 28,12345,Physics,Lecturer

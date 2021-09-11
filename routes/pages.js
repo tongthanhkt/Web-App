@@ -474,7 +474,7 @@ router.get("/lecturer/lecturer_view_course", (req, res) => {
   var id = localStorage.getItem("ID");
   console.log("ID", id);
   database.query(
-    "SELECT Course.SubjectID,Name,Credit,Year,Semester,Class from Course,Subject where Course.SubjectID=Subject.SubjectID and LecturerID = ?",
+    "SELECT distinct Course.SubjectID,Name,Credit,Year,Semester,Class from Course,Subject where Course.SubjectID=Subject.SubjectID and LecturerID = ?",
     id,
     function (error, results) {
       if (error) {
@@ -513,7 +513,7 @@ router.get("/lecturer/lecturer_view_student", (req, res) => {
   var id = localStorage.getItem("ID");
   console.log("ID", id);
   database.query(
-    "SELECT Course.SubjectID,Name,Credit,Year,Semester,Class from Course,Subject where Course.SubjectID=Subject.SubjectID and LecturerID = ?",
+    "SELECT distinct Course.SubjectID,Name,Credit,Year,Semester,Class from Course,Subject where Course.SubjectID=Subject.SubjectID and LecturerID = ?",
     id,
     function (error, results) {
       if (error) {
@@ -552,7 +552,7 @@ router.get("/lecturer/lecturer_edit_student", (req, res) => {
   var id = localStorage.getItem("ID");
   console.log("ID", id);
   database.query(
-    "SELECT Course.SubjectID,Name,Credit,Year,Semester,Class from Course,Subject where Course.SubjectID=Subject.SubjectID and LecturerID = ?",
+    "SELECT distinct Course.SubjectID,Name,Credit,Year,Semester,Class from Course,Subject where Course.SubjectID=Subject.SubjectID and LecturerID = ?",
     id,
     function (error, results) {
       if (error) {
@@ -593,7 +593,7 @@ router.get(
     console.log("SubID", req.params);
     let { subid, subyear, subSemester, subClass } = req.params;
     var id = localStorage.getItem("ID");
-    let query = `SELECT * from Course c join Student s on c.StudentID = s.StudentID where c.LecturerID = '${id}' and c.SubjectID ='${subid}' and c.Year=${subyear} and c.Semester=${subSemester} and c.Class='${subClass}'`;
+    let query = `SELECT  * from Course c join Student s on c.StudentID = s.StudentID where c.LecturerID = '${id}' and c.SubjectID ='${subid}' and c.Year=${subyear} and c.Semester=${subSemester} and c.Class='${subClass}'`;
     database.query(query, function (error, results, id) {
       if (error) {
         console.log("error ocurred while getting user details of ", id, error);
@@ -608,7 +608,7 @@ router.get(
           temp +=
             results[element]["StudentID"] +
             "||" +
-            results[element]["Fullname"] +
+            results[element]["FullName"] +
             "||" +
             results[element]["Midterm"] +
             "||" +
@@ -631,7 +631,7 @@ router.get(
     console.log("SubID", req.params);
     let { subid, subyear, subSemester, subClass } = req.params;
     var id = localStorage.getItem("ID");
-    let query = `SELECT * from Course c join Student s on c.StudentID = s.StudentID where c.LecturerID = '${id}' and c.SubjectID ='${subid}' and c.Year=${subyear} and c.Semester=${subSemester} and c.Class='${subClass}'`;
+    let query = `SELECT  * from Course c join Student s on c.StudentID = s.StudentID where c.LecturerID = '${id}' and c.SubjectID ='${subid}' and c.Year=${subyear} and c.Semester=${subSemester} and c.Class='${subClass}'`;
     database.query(query, function (error, results, id) {
       if (error) {
         console.log("error ocurred while getting user details of ", id, error);
@@ -646,7 +646,7 @@ router.get(
           temp +=
             results[element]["StudentID"] +
             "||" +
-            results[element]["Fullname"] +
+            results[element]["FullName"] +
             "||" +
             results[element]["Midterm"] +
             "||" +
